@@ -1,0 +1,956 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public Superluminal API and client documentation">
+      
+      
+      
+      
+        <link rel="prev" href="cpp.html">
+      
+      
+        <link rel="next" href="../funding.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Python Client - Superluminal API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-with-the-python-client" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Superluminal API Documentation" class="md-header__button md-logo" aria-label="Superluminal API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Superluminal API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Python Client
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Superluminal API Documentation" class="md-nav__button md-logo" aria-label="Superluminal API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Superluminal API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cpp.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++ Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Client
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="python.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-the-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the SDK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fund-the-wallet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fund the wallet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-active-markets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find active markets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start the TUI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#market-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submit-an-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submit an order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-or-cancel-an-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify or cancel an order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-the-sdk-from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the SDK from Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-run-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-run checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common problems
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funding.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding Accounts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Public API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-the-sdk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install the SDK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fund-the-wallet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fund the wallet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#find-active-markets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find active markets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#start-the-tui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start the TUI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#market-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Market data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#submit-an-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submit an order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modify-or-cancel-an-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify or cancel an order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-the-sdk-from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the SDK from Python
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#first-run-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-run checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common problems
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="getting-started-with-the-python-client">Getting Started with the Python Client<a class="headerlink" href="#getting-started-with-the-python-client" title="Permanent link">&para;</a></h1>
+<p>The standalone Python SDK includes a Textual terminal application for viewing
+native maker and taker books, monitoring a trading account, and submitting,
+modifying, and cancelling signed orders.</p>
+<p>It is a reference client rather than a complete binding for every public API
+command. See the <a href="../api.html">public API reference</a> when building a custom
+integration.</p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<p>You need:</p>
+<ul>
+<li>the supplied <code>python_gateway_client</code> directory;</li>
+<li>Python 3.12 or newer;</li>
+<li>internet access to install pinned dependencies from PyPI; and</li>
+<li>a Solana-format Ed25519 keypair JSON file for your Fogo wallet.</li>
+</ul>
+<p>The SDK is self-contained and installs into its own virtual environment.</p>
+<h2 id="install-the-sdk">Install the SDK<a class="headerlink" href="#install-the-sdk" title="Permanent link">&para;</a></h2>
+<p>From <code>python_gateway_client</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./scripts/bootstrap_venv.sh
+</code></pre></div>
+<p>This creates <code>.venv</code> locally and installs the pinned runtime dependencies. It
+does not modify the system Python installation.</p>
+<h2 id="fund-the-wallet">Fund the wallet<a class="headerlink" href="#fund-the-wallet" title="Permanent link">&para;</a></h2>
+<p>The bundle includes the source funding utility. From <code>python_gateway_client</code>,
+fund subaccount <code>0</code> before starting the Python client:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>funding-tools
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bun<span class="w"> </span>install<span class="w"> </span>--production<span class="w"> </span>--frozen-lockfile
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>bun<span class="w"> </span>run<span class="w"> </span>fund:testnet<span class="w"> </span>--keypair<span class="w"> </span>/path/to/wallet.json
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">cd</span><span class="w"> </span>..
+</code></pre></div>
+<p>Wait for <code>Funding complete.</code>. Do not run the funding utility while the Python
+client is connected: the public gateway permits one authenticated session per
+wallet, so the newer session would preempt the older one.</p>
+<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
+derivation, faucet limits, and manual deposits.</p>
+<h2 id="find-active-markets">Find active markets<a class="headerlink" href="#find-active-markets" title="Permanent link">&para;</a></h2>
+<p>Fetch symbology before choosing <code>--feed-id</code> values:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>--fail<span class="w"> </span>https://testnet.slx.fi/v1/symbology
+</code></pre></div>
+<p>At the time of writing, public testnet exposes BTC (<code>1</code>), ETH (<code>2</code>), and SOL
+(<code>6</code>). Treat the response as authoritative because markets and IDs may change.</p>
+<p>Use <code>px_exponent</code>, <code>tick_size</code>, and <code>size_decimals</code> when converting human
+prices and quantities to raw wire integers.</p>
+<h2 id="start-the-tui">Start the TUI<a class="headerlink" href="#start-the-tui" title="Permanent link">&para;</a></h2>
+<p>From <code>python_gateway_client</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./.venv/bin/sl-tui<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--keypair<span class="w"> </span>./wallet.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--subaccount<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--partition-id<span class="w"> </span>0x01
+</code></pre></div>
+<p>Arguments:</p>
+<ul>
+<li><code>--ws</code>: WebSocket endpoint. The default is local development, so always pass
+  the public <code>wss://</code> endpoint for testnet.</li>
+<li><code>--keypair</code>: Fogo wallet keypair JSON file.</li>
+<li><code>--subaccount</code>: trading subaccount displayed by the application.</li>
+<li><code>--feed-id</code>: market ID to subscribe to; repeat it for each market.</li>
+<li><code>--partition-id</code>: signed-message partition; public testnet uses <code>0x01</code>.</li>
+<li><code>--auth-expiry-seconds</code>: optional nonzero authentication lifetime.</li>
+</ul>
+<h2 id="connection-flow">Connection flow<a class="headerlink" href="#connection-flow" title="Permanent link">&para;</a></h2>
+<p>The client performs these steps automatically:</p>
+<ol>
+<li>Fetch <code>GET /v1/symbology</code>.</li>
+<li>Send <code>auth_wallet</code> with the wallet public key.</li>
+<li>Sign the returned <code>auth_challenge</code> locally.</li>
+<li>Send <code>auth_response</code> and wait for <code>ack accepted</code>.</li>
+<li>Send <code>subscribe_account</code>.</li>
+<li>Subscribe to every configured market.</li>
+</ol>
+<p>The first private account message is normally <code>AccountSnapshot</code>. Later account
+messages report accepted orders, rejects, fills, settlements, collateral,
+funding, modifications, and cancellations.</p>
+<h2 id="market-data">Market data<a class="headerlink" href="#market-data" title="Permanent link">&para;</a></h2>
+<p>Native <code>subscribe_market</code> streams contain two book views:</p>
+<ul>
+<li><code>bookType: "maker"</code></li>
+<li><code>bookType: "taker"</code></li>
+</ul>
+<p>The Python client synchronizes the views independently and combines them in
+the ladder. It also consumes <code>Trade</code> events. If it receives <code>stream_reset</code>, it
+discards the affected local book and resubscribes.</p>
+<h2 id="submit-an-order">Submit an order<a class="headerlink" href="#submit-an-order" title="Permanent link">&para;</a></h2>
+<p>The order ticket creates and signs a <code>signed_order</code> proof locally. Choose:</p>
+<ul>
+<li>market;</li>
+<li>buy or sell;</li>
+<li>quantity;</li>
+<li>limit, mark-to-mid, or market order;</li>
+<li>GTC or IOC where applicable; and</li>
+<li>explicit <code>MAKER</code> or <code>TAKER</code> role.</li>
+</ul>
+<p>Role is not inferred. Market orders require <code>TAKER</code>. For a protected market
+order, provide a reference price and slippage from 1 to 1,000,000 ppm. Leave
+both fields empty for an unrestricted market order.</p>
+<p>Sending the command successfully is not the final order result. Observe the
+private account stream:</p>
+<ul>
+<li><code>ack rejected</code> or <code>ack busy</code> reports a local command failure;</li>
+<li><code>OrderAccepted</code> confirms admission to the account stream;</li>
+<li><code>OrderReject</code> reports an asynchronous rejection; and</li>
+<li><code>Fill</code>, <code>FillSettled</code>, and <code>FillBusted</code> report execution and settlement.</li>
+</ul>
+<h2 id="modify-or-cancel-an-order">Modify or cancel an order<a class="headerlink" href="#modify-or-cancel-an-order" title="Permanent link">&para;</a></h2>
+<p>Select a working order in the TUI to modify or cancel it. The client signs the
+corresponding command and waits for <code>ModifyAck</code>, <code>ModifyReject</code>, <code>CancelAck</code>, or
+<code>CancelReject</code> on the account stream.</p>
+<h2 id="use-the-sdk-from-python">Use the SDK from Python<a class="headerlink" href="#use-the-sdk-from-python" title="Permanent link">&para;</a></h2>
+<p>The reusable pieces live under <code>dfba_client</code>:</p>
+<ul>
+<li><code>GatewayClient</code> handles authentication, subscriptions, orders, modifies,
+  cancels, and subaccount transfers.</li>
+<li><code>WebSocketTransport</code> owns the reconnecting WebSocket loop.</li>
+<li><code>commands</code> contains JSON request encoders.</li>
+<li><code>codec</code> validates and decodes gateway messages.</li>
+<li><code>signer</code> loads keypairs and creates signed command proofs.</li>
+</ul>
+<p>The TUI is an example consumer of these modules. Applications can construct a
+<code>ClientConfig</code>, initialize <code>GatewayClient</code>, and run <code>WebSocketTransport</code>
+without using Textual.</p>
+<h2 id="first-run-checklist">First-run checklist<a class="headerlink" href="#first-run-checklist" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Check <code>https://testnet.slx.fi/healthz</code> returns <code>ok</code>.</li>
+<li>Fetch <code>/v1/symbology</code> and select active market IDs.</li>
+<li>Install the SDK with <code>./scripts/bootstrap_venv.sh</code>.</li>
+<li>Fund the wallet and wait for <code>Funding complete.</code>.</li>
+<li>Start <code>sl-tui</code> with the same keypair and subaccount <code>0</code>.</li>
+<li>Confirm <code>AccountSnapshot</code> and market data appear.</li>
+<li>Submit a small order and observe its private lifecycle events.</li>
+<li>Cancel it if it remains working.</li>
+</ol>
+<h2 id="common-problems">Common problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Session preempted:</strong> another connection authenticated the same wallet.</li>
+<li><strong>Configured feed missing:</strong> refresh <code>/v1/symbology</code> and use active IDs.</li>
+<li><strong>Invalid price grid:</strong> encode the price using current <code>px_exponent</code> and
+  <code>tick_size</code>.</li>
+<li><strong>Missing balance:</strong> complete funding and wait for
+  <code>UserCollateralUpdate</code> before starting the client.</li>
+<li><strong>Book reset:</strong> discard the affected book and resubscribe; the reference
+  client does this automatically.</li>
+</ul>
+<p>For complete message schemas and rejection reasons, use the
+<a href="../api.html">public API reference</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "navigation.sections", "navigation.top", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
