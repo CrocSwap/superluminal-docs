@@ -1862,6 +1862,12 @@ guided setup, start with the <a href="getting-started/cpp.html">C++ client</a>,
 <p>Fetch <code>GET /v1/evm/addresses</code> from the gateway instead of hardcoding EVM
 contract addresses.</p>
 <h2 id="transport-and-limits">Transport and Limits<a class="headerlink" href="#transport-and-limits" title="Permanent link">&para;</a></h2>
+<p><strong>Identifier precision:</strong> gateway identifiers may arrive as JSON numbers
+or decimal strings. Clients must preserve the full unsigned 64-bit value.
+JavaScript and TypeScript clients must use <code>bigint</code> or lossless decimal
+strings, never <code>Number</code>, for gateway identifiers, sequence numbers,
+timestamps, and signed <code>uint64</code> fields. See
+<a href="conformance/test-vectors.json">the public conformance vectors</a>.</p>
 <h3 id="websocket">WebSocket<a class="headerlink" href="#websocket" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Max inbound frame size: <code>256 KiB</code></li>
@@ -3383,9 +3389,14 @@ submits the selected leg as a regular order for the next auction.</p>
 WebSocket commands instead of hardcoding local deployment artifacts.</p>
 <p>Completion:</p>
 <ul>
-<li>A successful submission does not emit a generic <code>ack accepted</code>.</li>
-<li>Wait for the matching <code>UserDepositAddressStatus</code> event. It confirms that the
-  wallet/subaccount deposit address is registered.</li>
+<li>Currently deployed gateways may report registration success as a generic
+  <code>ack accepted</code> or as the matching successful
+  <code>UserDepositAddressStatus</code>. The generic acknowledgement is not
+  correlated; accept it only after sending registration in a dedicated
+  pre-account-stream phase.</li>
+<li>Send registration before starting the account stream. Registration can be
+  eventually consistent, so allow tens of seconds and use bounded polling or
+  retry before transferring or requesting tokens.</li>
 <li>Validation and forwarding failures still return <code>ack rejected</code> or
   <code>ack busy</code>.</li>
 </ul>
@@ -3649,6 +3660,10 @@ the final executable limit is determined at auction time from Pyth</li>
 <li><code>MARKET</code> orders require <code>tif = IOC</code> and <code>role = TAKER</code></li>
 <li><code>MARKET</code> orders may use <code>price</code> as a reference price and positive <code>delta_ppm</code> as the maximum adverse slippage</li>
 <li><code>MARKET</code> orders with <code>price = 0</code> require <code>delta_ppm = 0</code>; this <code>0</code>/<code>0</code> combination is an unrestricted market order</li>
+<li>A client-side configuration value named slippage does not protect a market
+order unless the signed wire proof contains the documented nonzero reference
+<code>price</code> and <code>delta_ppm</code>. Use a price-bounded LIMIT/IOC for the first
+agent acceptance test.</li>
 <li><code>MARKET</code> orders with <code>price &gt; 0</code> are protected market orders and require <code>delta_ppm &gt; 0</code></li>
 <li>protected <code>MARKET</code> orders require <code>delta_ppm &lt;= 1000000</code>, i.e. at most 100% adverse slippage</li>
 <li><code>MARKET</code> orders require <code>delta_ppm &gt;= 0</code>; zero is valid only for the unrestricted <code>price = 0</code>, <code>delta_ppm = 0</code> combination</li>
@@ -4197,6 +4212,12 @@ collateral subaccount owned by the sender.</li>
 <ul>
 <li>Successful submit does not emit an immediate acceptance receipt.</li>
 <li>Authoritative order/cancel/modify/conditional/collateral/liquidation/vault/transfer state changes arrive through private/account stream events such as <code>OrderAccepted</code>, <code>ConditionalApproved</code>, <code>OrderReject</code>, <code>CancelAck</code>, <code>CancelReject</code>, <code>ModifyAck</code>, <code>ModifyReject</code>, <code>UserDepositAddressStatus</code>, <code>UserCollateralUpdate</code>, <code>AccountFundingUpdate</code>, <code>LiquidationTriggered</code>, <code>LiquidationCleared</code>, <code>WithdrawStatus</code>, <code>CreateVaultStatus</code>, <code>CreateVault</code>, <code>DepositVaultStatus</code>, <code>DepositVault</code>, <code>WithdrawVaultStatus</code>, <code>WithdrawVault</code>, <code>VaultOperationSubaccountCollateralChange</code>, <code>TransferSubaccountStatus</code>, and <code>SetDelegateStatus</code>.</li>
+<li>Correlate order state through <code>client_instruction_id</code>. One IOC may
+produce multiple partial <code>Fill</code> events. Deduplicate fills by wallet plus
+<code>trade_id</code>, and treat fills as provisional until <code>FillSettled</code> or
+<code>FillBusted</code> resolves settlement.</li>
+<li>After startup or an ambiguous disconnect, reconcile current positions and
+working orders from a fresh <code>AccountSnapshot</code> before retrying a command.</li>
 <li>Local validation and submit transport failures still return <code>ack</code> with <code>rejected</code> or <code>busy</code>:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a><span class="p">{</span>
@@ -4241,9 +4262,10 @@ collateral subaccount owned by the sender.</li>
 <li><code>auth_wallet</code> with <code>wallet_pubkey</code> + <code>expiry_seconds</code>.</li>
 <li>Receive <code>auth_challenge</code>.</li>
 <li>Sign challenge and send <code>auth_response</code>.</li>
-<li>Before transferring EVM deposit tokens, send <code>user_deposit_address</code> and wait
-   for the matching <code>UserDepositAddressStatus</code> so the wallet/subaccount EVM
-   deposit address is registered.</li>
+<li>Before subscribing to the account stream or transferring EVM deposit tokens,
+   send <code>user_deposit_address</code> and accept either <code>ack accepted</code> or the
+   matching successful <code>UserDepositAddressStatus</code>. Allow registration to
+   become visible before requesting funds.</li>
 <li>Transfer collateral to that address, then wait for <code>UserCollateralUpdate</code>
    before treating the trading subaccount as funded.</li>
 <li>Send <code>signed_order</code> / <code>signed_cancel</code> / <code>signed_modify</code> /
