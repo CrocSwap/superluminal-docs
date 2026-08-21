@@ -629,12 +629,14 @@ deposit address is registered.</p>
 only to sign the WebSocket authentication challenge; the private key is never
 sent to Superluminal.</p>
 <h2 id="install-the-funding-utilities">Install the funding utilities<a class="headerlink" href="#install-the-funding-utilities" title="Permanent link">&para;</a></h2>
-<p>The C++ and Python client bundles include cross-platform source utilities under
-<code>funding-tools</code>. They run with Bun on Linux, macOS, and Windows; no prebuilt
-executable is distributed.</p>
+<p>Optional C++ and Python client bundles may include cross-platform source
+utilities under <code>funding-tools</code>. They run with Bun on Linux, macOS, and
+Windows; no prebuilt executable is distributed. The bundle is not required:
+an agent can implement the public registration and faucet flow documented
+below.</p>
 <p>Requirements:</p>
 <ul>
-<li>a supplied C++ or Python client bundle;</li>
+<li>an optional supplied C++ or Python client bundle when using the utility;</li>
 <li>Bun 1.3.14 or newer; and</li>
 <li>an existing Fogo keypair JSON file.</li>
 </ul>
@@ -649,13 +651,15 @@ executable is distributed.</p>
 <p>The command:</p>
 <ol>
 <li>authenticates the Fogo wallet through <code>wss://testnet.slx.fi/ws</code>;</li>
-<li>subscribes to trading subaccount <code>0</code>;</li>
-<li>sends <code>user_deposit_address</code> and waits for
-   <code>UserDepositAddressStatus</code>;</li>
-<li>derives the Arbitrum Sepolia deposit address;</li>
-<li>requests testnet USDC from the public faucet; and</li>
-<li>waits for <code>UserCollateralUpdate</code> to confirm that the trading balance
-   increased.</li>
+<li>before starting the account stream, sends <code>user_deposit_address</code> for
+   subaccount <code>0</code> and accepts either <code>ack accepted</code> or the matching
+   successful <code>UserDepositAddressStatus</code>;</li>
+<li>derives the Arbitrum Sepolia deposit address and allows registration to
+   become visible, using bounded polling or retry because this can take tens
+   of seconds;</li>
+<li>requests testnet USDC from the public faucet and confirms the EVM receipt;</li>
+<li>opens a fresh account stream and waits for <code>AccountSnapshot</code> or
+   <code>UserCollateralUpdate</code> to confirm that the trading balance increased.</li>
 </ol>
 <p>Successful output has this form:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Fogo account:        &lt;base58 wallet address&gt;
@@ -667,6 +671,11 @@ executable is distributed.</p>
 </code></pre></div>
 <p><code>Funding complete.</code> confirms settlement into the trading account, not merely
 submission of an EVM transaction.</p>
+<p>Registration, EVM minting, and trading-account credit are separate steps. An
+accepted registration response or successful faucet transaction is not proof
+that collateral has reached the trading account. Before retrying after a
+timeout, check the EVM receipt and a fresh account snapshot. Fund multiple
+wallets serially.</p>
 <p>The faucet funds subaccount <code>0</code> only. It currently mints <code>10,000</code> testnet USDC
 when settled collateral plus pending EVM deposits is below <code>1,000</code> USDC. An
 already-funded account normally receives HTTP <code>403</code> until its balance is below
@@ -675,6 +684,21 @@ that threshold.</p>
 The funding session would otherwise preempt the client's authenticated session.
 The utility closes its own session before exiting.</p>
 <p>Run <code>bun run fund:testnet --help</code> for endpoint and timeout overrides.</p>
+<h3 id="public-faucet-http-contract">Public faucet HTTP contract<a class="headerlink" href="#public-faucet-http-contract" title="Permanent link">&para;</a></h3>
+<p>Clients that do not use the optional funding utility can request testnet
+funds directly after deposit registration is ready:</p>
+<div class="highlight"><pre><span></span><code>curl --fail-with-body \
+  --request POST \
+  --header 'content-type: application/json' \
+  --data '{"depositAddress":"0x&lt;derived-address&gt;","walletAddress":"&lt;base58-fogo-wallet&gt;"}' \
+  https://faucet.testnet.slx.fi/api/faucet
+</code></pre></div>
+<p>Success returns <code>{ "hash": "0x&lt;64-hex-character transaction hash&gt;" }</code>.
+An application-level failure returns <code>{ "error": "&lt;message&gt;" }</code> with an
+HTTP error status. Confirm the returned transaction with
+<code>eth_getTransactionReceipt</code> on Arbitrum Sepolia, then separately confirm
+credited collateral through a fresh account stream. The receipt alone is not
+trading-account proof.</p>
 <h2 id="derive-an-address-for-a-manual-deposit">Derive an address for a manual deposit<a class="headerlink" href="#derive-an-address-for-a-manual-deposit" title="Permanent link">&para;</a></h2>
 <p>Use <code>deposit:address</code> for production or any manual ERC20 deposit. This command
 registers the Fogo wallet and subaccount, derives the corresponding EVM
@@ -733,9 +757,14 @@ Do not hardcode deployment addresses.</p>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;subaccount_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">}</span>
 </code></pre></div>
-<p>Wait for the matching <code>UserDepositAddressStatus</code>. Registration success does not
-emit a generic <code>ack accepted</code>; validation or forwarding failures emit
-<code>ack rejected</code> or <code>ack busy</code>.</p>
+<p>For compatibility with currently deployed gateways, treat either a generic
+<code>{ "type": "ack", "status": "accepted" }</code> or the matching successful
+<code>UserDepositAddressStatus</code> as registration success. Send this command before
+starting the account stream because the generic acknowledgement is not
+correlated. Accept it only after sending the registration command in this
+dedicated phase. Allow registration to become visible before
+minting; use bounded polling or retry rather than assuming immediate readiness.
+Validation or forwarding failures emit <code>ack rejected</code> or <code>ack busy</code>.</p>
 <p>See <a href="api.html#user_deposit_address"><code>user_deposit_address</code></a> for the full wire
 contract.</p>
 <h2 id="faucet-errors">Faucet errors<a class="headerlink" href="#faucet-errors" title="Permanent link">&para;</a></h2>

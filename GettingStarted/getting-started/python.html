@@ -750,15 +750,21 @@ modifying, and cancelling signed orders.</p>
 <p>It is a reference client rather than a complete binding for every public API
 command. See the <a href="../api.html">public API reference</a> when building a custom
 integration.</p>
+<p>Agents building without a supplied SDK should start with the
+<a href="../AGENTS.md">public trading-agent contract</a> and implement only the
+documented public wire protocol. This documentation does not require access to
+another repository.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <p>You need:</p>
 <ul>
-<li>the supplied <code>python_gateway_client</code> directory;</li>
+<li>either an optional supplied <code>python_gateway_client</code> directory or a
+  client implemented from the public API and agent contract in this directory;</li>
 <li>Python 3.12 or newer;</li>
 <li>internet access to install pinned dependencies from PyPI; and</li>
 <li>a Solana-format Ed25519 keypair JSON file for your Fogo wallet.</li>
 </ul>
-<p>The SDK is self-contained and installs into its own virtual environment.</p>
+<p>When supplied, the optional SDK is self-contained and installs into its own
+virtual environment. It is not required for the documentation-only agent path.</p>
 <h2 id="install-the-sdk">Install the SDK<a class="headerlink" href="#install-the-sdk" title="Permanent link">&para;</a></h2>
 <p>From <code>python_gateway_client</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./scripts/bootstrap_venv.sh
@@ -776,6 +782,11 @@ fund subaccount <code>0</code> before starting the Python client:</p>
 <p>Wait for <code>Funding complete.</code>. Do not run the funding utility while the Python
 client is connected: the public gateway permits one authenticated session per
 wallet, so the newer session would preempt the older one.</p>
+<p>Registration must happen before the account stream starts. Accept either
+<code>ack accepted</code> or the matching successful
+<code>UserDepositAddressStatus</code>, allow registration to become visible, confirm
+the EVM receipt, and then use a fresh <code>AccountSnapshot</code> or
+<code>UserCollateralUpdate</code> to prove trading collateral was credited.</p>
 <p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
 derivation, faucet limits, and manual deposits.</p>
 <h2 id="find-active-markets">Find active markets<a class="headerlink" href="#find-active-markets" title="Permanent link">&para;</a></h2>
@@ -820,6 +831,9 @@ prices and quantities to raw wire integers.</p>
 <p>The first private account message is normally <code>AccountSnapshot</code>. Later account
 messages report accepted orders, rejects, fills, settlements, collateral,
 funding, modifications, and cancellations.</p>
+<p>Authentication acknowledgement alone is not trading readiness. Before sending
+an order, verify that the intended subaccount exists, collateral is sufficient,
+positions match the expected startup state, and working orders are reconciled.</p>
 <h2 id="market-data">Market data<a class="headerlink" href="#market-data" title="Permanent link">&para;</a></h2>
 <p>Native <code>subscribe_market</code> streams contain two book views:</p>
 <ul>
@@ -842,6 +856,10 @@ discards the affected local book and resubscribes.</p>
 <p>Role is not inferred. Market orders require <code>TAKER</code>. For a protected market
 order, provide a reference price and slippage from 1 to 1,000,000 ppm. Leave
 both fields empty for an unrestricted market order.</p>
+<p><strong>Safety:</strong> wire fields <code>price = 0</code> and <code>delta_ppm = 0</code>
+create an unrestricted market order. A configuration value named slippage does
+not change those signed fields. Use a small price-bounded LIMIT/IOC for the
+first agent acceptance test.</p>
 <p>Sending the command successfully is not the final order result. Observe the
 private account stream:</p>
 <ul>
@@ -850,6 +868,11 @@ private account stream:</p>
 <li><code>OrderReject</code> reports an asynchronous rejection; and</li>
 <li><code>Fill</code>, <code>FillSettled</code>, and <code>FillBusted</code> report execution and settlement.</li>
 </ul>
+<p>An IOC may produce multiple partial fills. Correlate by
+<code>client_instruction_id</code>, deduplicate fills by wallet plus
+<code>trade_id</code>, and do not treat a <code>Fill</code> as irrevocable before its
+settlement or bust event. Reconcile a fresh account snapshot before retrying
+after an ambiguous disconnect.</p>
 <h2 id="modify-or-cancel-an-order">Modify or cancel an order<a class="headerlink" href="#modify-or-cancel-an-order" title="Permanent link">&para;</a></h2>
 <p>Select a working order in the TUI to modify or cancel it. The client signs the
 corresponding command and waits for <code>ModifyAck</code>, <code>ModifyReject</code>, <code>CancelAck</code>, or
