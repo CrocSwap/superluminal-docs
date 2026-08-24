@@ -1,0 +1,66 @@
+{
+  "notice": "Synthetic, never-funded public conformance data. Never use this key for a live or funded account.",
+  "encoding": {
+    "integer_byte_order": "little-endian unless the API reference explicitly states otherwise",
+    "binary_envelope": "base64",
+    "signature": "Ed25519"
+  },
+  "test_key": {
+    "seed_hex": "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20",
+    "public_key_hex": "79b5562e8fe654f94078b112e8a98ba7901f853ae695bed7e0e3910bad049664",
+    "public_key_base58": "9C6hybhQ6Aycep9jaUnP6uL9ZYvDjUp1aSkFWPUFJtpj"
+  },
+  "authentication": {
+    "message_utf8": "AETHEON_AUTH_V1|9C6hybhQ6Aycep9jaUnP6uL9ZYvDjUp1aSkFWPUFJtpj|fixture-nonce|1710000000|1710000300|fixture-session",
+    "signature_base64": "Q5n0rFos3+ANG2grutwxkG88hiyweLWBaeSRedONuTrV8sVjMHIQ1aL26LayQwCpqlUiuGy6/4SOCpsDRgIAAQ=="
+  },
+  "signed_order": {
+    "description": "Price-bounded IOC LIMIT taker buy using the maximum public request_id64.",
+    "fixed_unix_seconds": "1710000000",
+    "partition_id": "1",
+    "subaccount_id": "0",
+    "request_id64": "9223372036854775807",
+    "order": {
+      "symbol": "1",
+      "price": "5000000",
+      "qty": "1000",
+      "tif": "0",
+      "order_type": "0",
+      "execution_mode": "0",
+      "role": "1",
+      "delta_ppm": "0",
+      "side": "0"
+    },
+    "proof_length_bytes": 191,
+    "proof_base64": "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQBAAAAAAAAAAAAgIfsZQAAAACsiOxlAAAAAAEAAABAS0wAAAAAAOgDAAAAAAAAAAAAAQAAAAAA/////////395tVYuj+ZU+UB4sRLoqYunkB+FOuaVvtfg45ELrQSWZLGD/ShT2j7H+CXZ37/ddhnr3CvFh+paIjCx8JMeo4P5p1NEYDz0SvSwSqCLs9XXUixiq2fi6dJm4kMnZn28tQc="
+  },
+  "signed_cancel": {
+    "description": "Cancel with a full-range uint64 external_order_id and the maximum public request_id64.",
+    "fixed_unix_seconds": "1710000000",
+    "partition_id": "1",
+    "subaccount_id": "0",
+    "external_order_id": "18446744073709551615",
+    "request_id64": "9223372036854775807",
+    "symbol": "1",
+    "role": "1",
+    "proof_length_bytes": 175,
+    "proof_base64": "ebVWLo/mVPlAeLES6KmLp5AfhTrmlb7X4OORC60ElmQBAAAAAAAAAAAAgIfsZQAAAACsiOxlAAAAAP///////////////////38BAAAAAXm1Vi6P5lT5QHixEuipi6eQH4U65pW+1+DjkQutBJZkW+ZC/uTP8N7+CbujJI4fP9SS0iBdHZjaWQuHVdcV8OqN6x46NQ+pZXDjRu6YGOjQ8iyViqziylZe0wBKwGS9Bw=="
+  },
+  "identifier_cases": [
+    {
+      "wire_value": "9007199254740993",
+      "meaning": "first integer above JavaScript Number.MAX_SAFE_INTEGER",
+      "required_decimal_round_trip": "9007199254740993"
+    },
+    {
+      "wire_value": "9223372036854775807",
+      "meaning": "maximum public request_id64 with bit 63 clear",
+      "required_decimal_round_trip": "9223372036854775807"
+    },
+    {
+      "wire_value": "18446744073709551615",
+      "meaning": "maximum uint64 gateway identifier",
+      "required_decimal_round_trip": "18446744073709551615"
+    }
+  ]
+}
