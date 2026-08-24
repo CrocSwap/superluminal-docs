@@ -738,18 +738,12 @@ integration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./build/api_client/api_client<span class="w"> </span>--version
 </code></pre></div>
 <h2 id="fund-the-wallet">Fund the wallet<a class="headerlink" href="#fund-the-wallet" title="Permanent link">&para;</a></h2>
-<p>The bundle includes the source funding utility. Fund subaccount <code>0</code> before
-starting the client:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>funding-tools
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bun<span class="w"> </span>install<span class="w"> </span>--production<span class="w"> </span>--frozen-lockfile
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>bun<span class="w"> </span>run<span class="w"> </span>fund:testnet<span class="w"> </span>--keypair<span class="w"> </span>/path/to/wallet.json
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">cd</span><span class="w"> </span>..
-</code></pre></div>
-<p>Wait for <code>Funding complete.</code>. The funding utility opens an authenticated
-session, and the public gateway permits one authenticated session per wallet,
-so running it while the client is connected will preempt the client.</p>
-<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
-derivation, faucet limits, and manual deposits.</p>
+<p>Programmatic faucet access is not part of the public API. Provision testnet
+collateral through an approved Superluminal flow before starting the client,
+then confirm the credited balance through a fresh <code>AccountSnapshot</code> or
+<code>UserCollateralUpdate</code>.</p>
+<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements,
+deposit-address registration, balance verification, and manual deposits.</p>
 <h2 id="start-the-client">Start the client<a class="headerlink" href="#start-the-client" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>./build/api_client/api_client<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>

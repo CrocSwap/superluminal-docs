@@ -772,23 +772,16 @@ virtual environment. It is not required for the documentation-only agent path.</
 <p>This creates <code>.venv</code> locally and installs the pinned runtime dependencies. It
 does not modify the system Python installation.</p>
 <h2 id="fund-the-wallet">Fund the wallet<a class="headerlink" href="#fund-the-wallet" title="Permanent link">&para;</a></h2>
-<p>The bundle includes the source funding utility. From <code>python_gateway_client</code>,
-fund subaccount <code>0</code> before starting the Python client:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">cd</span><span class="w"> </span>funding-tools
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bun<span class="w"> </span>install<span class="w"> </span>--production<span class="w"> </span>--frozen-lockfile
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>bun<span class="w"> </span>run<span class="w"> </span>fund:testnet<span class="w"> </span>--keypair<span class="w"> </span>/path/to/wallet.json
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">cd</span><span class="w"> </span>..
-</code></pre></div>
-<p>Wait for <code>Funding complete.</code>. Do not run the funding utility while the Python
-client is connected: the public gateway permits one authenticated session per
-wallet, so the newer session would preempt the older one.</p>
+<p>Programmatic faucet access is not part of the public API. Provision testnet
+collateral through an approved Superluminal flow before starting the Python
+client.</p>
 <p>Registration must happen before the account stream starts. Accept either
 <code>ack accepted</code> or the matching successful
 <code>UserDepositAddressStatus</code>, allow registration to become visible, confirm
-the EVM receipt, and then use a fresh <code>AccountSnapshot</code> or
+the approved funding flow completed, and then use a fresh <code>AccountSnapshot</code> or
 <code>UserCollateralUpdate</code> to prove trading collateral was credited.</p>
-<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
-derivation, faucet limits, and manual deposits.</p>
+<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements,
+deposit-address registration, balance verification, and manual deposits.</p>
 <h2 id="find-active-markets">Find active markets<a class="headerlink" href="#find-active-markets" title="Permanent link">&para;</a></h2>
 <p>Fetch symbology before choosing <code>--feed-id</code> values:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>--fail<span class="w"> </span>https://testnet.slx.fi/v1/symbology

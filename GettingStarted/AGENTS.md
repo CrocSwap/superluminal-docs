@@ -1,8 +1,9 @@
 # Superluminal testnet trading-agent contract
 
 This directory is the complete public context for building a Superluminal
-testnet trading agent. Do not assume access to another repository, an internal
-SDK, a prefunded wallet, or unpublished deployment information.
+testnet trading agent after testnet collateral has been provisioned through an
+approved Superluminal flow. Do not assume access to another repository, an
+internal SDK, or unpublished deployment information.
 
 ## Scope and source of truth
 
@@ -31,9 +32,11 @@ until the basic lifecycle below passes end to end.
 - Treat `session_preempted` as terminal. Do not reconnect in a loop while
   another process owns the wallet session.
 
-## Create and fund the account
+## Create and prepare the account
 
-Funding is a multi-system workflow, not a successful faucet HTTP call.
+Programmatic faucet access is not part of the public API. Provision testnet
+collateral through an approved Superluminal flow, then verify the resulting
+account state before trading.
 
 1. Generate and securely store a Solana-format Ed25519 keypair.
 2. Open the funding WebSocket and complete `auth_wallet` / `auth_response`.
@@ -43,20 +46,17 @@ Funding is a multi-system workflow, not a successful faucet HTTP call.
      command in this dedicated pre-account-stream phase
    - the matching successful `UserDepositAddressStatus`
 5. Derive the CREATE2 address from `GET /v1/evm/addresses`. Never hardcode it.
-6. Allow registration to become externally visible before requesting funds.
+6. Allow registration to become externally visible before provisioning funds.
    Poll or retry with bounded backoff; registration can take tens of seconds.
-7. Request the public testnet faucet mint and confirm the Arbitrum Sepolia EVM
-   receipt.
+7. Provision collateral through the approved Superluminal testnet flow.
 8. Close the funding session, open a fresh authenticated account session, send
    `subscribe_account`, and wait for `AccountSnapshot` or
    `UserCollateralUpdate` to prove trading collateral was credited.
 
 The generic accepted acknowledgement is not correlated, which is why
 registration must run as a dedicated phase before account subscription. An EVM
-receipt is not proof of credited trading collateral. Before repeating a
-faucet request after a timeout, recheck the EVM receipt and fresh account state
-so the agent does not duplicate an in-flight funding attempt. Fund multiple
-wallets serially.
+receipt is not proof of credited trading collateral. After provisioning, check
+a fresh account snapshot before retrying or starting a trading client.
 
 ## Readiness gate
 
@@ -120,8 +120,8 @@ only this directory:
 
 1. Register the deposit address before account subscription.
 2. Accept either supported registration-success response.
-3. Wait for registration readiness, request faucet funds, confirm the EVM
-   receipt, and confirm credited trading collateral.
+3. Wait for registration readiness, provision testnet collateral through the
+   approved flow, and confirm credited trading collateral.
 4. Connect the bot, receive and validate `AccountSnapshot`, and synchronize
    market data.
 5. Place one small price-bounded testnet order and observe the authoritative
