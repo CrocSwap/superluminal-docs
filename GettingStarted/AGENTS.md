@@ -2,13 +2,17 @@
 
 This directory is the complete public context for building a Superluminal
 testnet trading agent. Do not assume access to another repository, an internal
-SDK, a prefunded wallet, or unpublished deployment information.
+client, a prefunded wallet, or unpublished deployment information.
 
 ## Scope and source of truth
 
 - Testnet only: `https://testnet.slx.fi` and `wss://testnet.slx.fi/ws`.
 - Read `api.html` for the public HTTP, WebSocket, and signed-wire contracts.
 - Read `funding.html` before funding a wallet.
+- In the hosted documentation tree, download a tested C++ or Python reference
+  client from `downloads/` and verify it against `downloads/manifest.json`.
+  Inside an extracted bundle, use the client source and `funding-tools/` next
+  to this `docs/` directory; a nested `downloads/` directory is not expected.
 - Use `conformance/test-vectors.json` to verify signing and integer handling.
 - Fetch `/v1/symbology` at startup. Do not hardcode market identifiers, price
   exponents, tick sizes, quantity precision, or contract addresses.
@@ -38,25 +42,18 @@ Funding is a multi-system workflow, not a successful faucet HTTP call.
 1. Generate and securely store a Solana-format Ed25519 keypair.
 2. Open the funding WebSocket and complete `auth_wallet` / `auth_response`.
 3. Before `subscribe_account`, send `user_deposit_address` for subaccount `0`.
-4. Treat either of these live-compatible responses as registration success:
-   - `{ "type": "ack", "status": "accepted" }` received after the registration
-     command in this dedicated pre-account-stream phase
-   - the matching successful `UserDepositAddressStatus`
+4. Wait for the matching `UserDepositAddressStatus`. A successful registration
+   does not emit a generic accepted acknowledgement.
 5. Derive the CREATE2 address from `GET /v1/evm/addresses`. Never hardcode it.
-6. Allow registration to become externally visible before requesting funds.
-   Poll or retry with bounded backoff; registration can take tens of seconds.
-7. Request the public testnet faucet mint and confirm the Arbitrum Sepolia EVM
+6. Request the public testnet faucet mint and confirm the Arbitrum Sepolia EVM
    receipt.
-8. Close the funding session, open a fresh authenticated account session, send
-   `subscribe_account`, and wait for `AccountSnapshot` or
-   `UserCollateralUpdate` to prove trading collateral was credited.
+7. Confirm `UserCollateralUpdate` or a fresh `AccountSnapshot` proves trading
+   collateral was credited.
 
-The generic accepted acknowledgement is not correlated, which is why
-registration must run as a dedicated phase before account subscription. An EVM
-receipt is not proof of credited trading collateral. Before repeating a
-faucet request after a timeout, recheck the EVM receipt and fresh account state
-so the agent does not duplicate an in-flight funding attempt. Fund multiple
-wallets serially.
+An EVM receipt is not proof of credited trading collateral. Before repeating a
+faucet request after a timeout, inspect its transaction hash and fresh account
+state so the agent does not duplicate an in-flight funding attempt. Fund
+multiple wallets serially.
 
 ## Readiness gate
 
@@ -80,28 +77,31 @@ and private lifecycle events before deciding whether a command needs retrying.
 - Role is explicit: `MAKER` or `TAKER`; it is not inferred.
 - Encode price and quantity from the current symbology response.
 - `MARKET` with wire fields `price = 0` and `delta_ppm = 0` is unrestricted.
-  A configuration value named "slippage" does not protect an order unless the
-  signed wire proof contains the documented nonzero reference `price` and
-  `delta_ppm`. Do not use unrestricted MARKET in the acceptance flow.
-- Sending `signed_order`, `signed_cancel`, or `signed_modify` is not order
-  truth. Correlate the private stream by `client_instruction_id` and consume
-  `OrderAccepted` or `OrderReject` before advancing state.
+  Do not use unrestricted MARKET in the acceptance flow.
+- Sending a signed command is not order truth. Correlate the private stream by
+  `client_instruction_id` and consume its authoritative result.
 - One IOC may produce multiple partial `Fill` events.
-- A `Fill` is execution information, not necessarily final settlement. Process
-  `FillSettled` and `FillBusted`, and do not treat provisional fills as
-  irrevocable accounting.
+- Process `FillSettled` and `FillBusted`; a `Fill` alone is not irrevocable
+  accounting.
 - Deduplicate fills by wallet public key plus `trade_id`.
 
 ## Identifier handling
 
-Gateway identifiers may be JSON numbers or decimal strings. Preserve their
-full unsigned 64-bit value. JavaScript and TypeScript implementations must use
-`bigint` or lossless decimal strings, never `Number`, for gateway IDs, sequence
-numbers, timestamps, and signed `uint64` fields.
+The JSON interface has stable order-identifier types:
+
+- `client_instruction_id` and `original_client_instruction_id` are always
+  quoted unsigned decimal strings. Decode them losslessly and reject numbers.
+- `external_order_id` is always a JSON integer number and is guaranteed not to
+  exceed `9007199254740991`. Reject strings.
+
+Other fields explicitly marked as dual-form in the API reference, including
+leaderboard `last_seq` and user-volume `subaccount_id`, must still be preserved
+losslessly. JavaScript and TypeScript implementations should decode those as
+`bigint` or lossless decimal strings, never `Number`.
 
 Bit 63 of public `request_id64` is reserved, so its maximum public value is
-`9223372036854775807`. Other gateway identifiers may use the complete `uint64`
-range through `18446744073709551615`.
+`9223372036854775807`. Other unsigned 64-bit values may use the complete range
+through `18446744073709551615`.
 
 ## Always-on operation
 
@@ -110,7 +110,7 @@ range through `18446744073709551615`.
 - Cancel working orders that exceed their intended lifetime.
 - Never blindly retry an order after an ambiguous disconnect; reconcile first.
 - On SIGTERM, stop creating orders, cancel working orders, flatten any position
-  with a bounded order, wait for authoritative lifecycle/settlement events,
+  with a bounded order, wait for authoritative lifecycle and settlement events,
   and verify the final account state.
 
 ## Acceptance test
@@ -118,18 +118,16 @@ range through `18446744073709551615`.
 The build is complete only when a fresh wallet can perform this sequence using
 only this directory:
 
-1. Register the deposit address before account subscription.
-2. Accept either supported registration-success response.
-3. Wait for registration readiness, request faucet funds, confirm the EVM
-   receipt, and confirm credited trading collateral.
-4. Connect the bot, receive and validate `AccountSnapshot`, and synchronize
-   market data.
-5. Place one small price-bounded testnet order and observe the authoritative
+1. Register the deposit address and wait for `UserDepositAddressStatus`.
+2. Request faucet funds, confirm the EVM receipt, and confirm credited trading
+   collateral.
+3. Connect the client, validate `AccountSnapshot`, and synchronize market data.
+4. Place one small price-bounded testnet order and observe the authoritative
    lifecycle, including partial and settlement events when present.
-6. Cancel or flatten, close gracefully, reconnect, and prove there are no
+5. Cancel or flatten, close gracefully, reconnect, and prove there are no
    unexpected positions or working orders.
-7. Verify that a second authenticated session for the same wallet preempts the
-   first and that the bot stops rather than fighting for the session.
+6. Verify that a second authenticated session for the same wallet preempts the
+   first and that the client stops rather than fighting for the session.
 
 Do not include real keys, funded fixture wallets, private endpoints, internal
-hostnames, or implementation details in the generated bot or its documentation.
+hostnames, or implementation details in generated clients or documentation.
