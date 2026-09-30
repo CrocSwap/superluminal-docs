@@ -605,8 +605,8 @@ fund trading subaccounts, and submit signed trading commands.</p>
   complete a bounded first testnet trade.</li>
 <li><a href="getting-started/cpp.html">C++ client</a>: build and run the reference C++ client.</li>
 <li><a href="getting-started/python.html">Python reference client</a>: install and run the Python client and TUI.</li>
-<li><a href="funding.html">Fund an account</a>: use the public testnet faucet or prepare an
-  address for a manual collateral transfer.</li>
+<li><a href="funding.html">Fund an account</a>: request testnet collateral from Superluminal
+  or prepare an address for a manual collateral transfer.</li>
 <li><a href="tp-sl-and-reduce-only.html">TP/SL and reduce-only</a>: protect position quantity,
   handle manual closes, and reconcile conditional exits.</li>
 <li><a href="api.html">Public API</a>: HTTP and WebSocket requests, responses, pagination, and
@@ -641,10 +641,6 @@ fund trading subaccounts, and submit signed trading commands.</p>
 <td>EVM RPC</td>
 <td><code>https://sepolia-rollup.arbitrum.io/rpc</code></td>
 </tr>
-<tr>
-<td>Faucet</td>
-<td><code>https://faucet.testnet.slx.fi/api/faucet</code></td>
-</tr>
 </tbody>
 </table>
 <p>Read market identifiers and scaling metadata from the initial
@@ -654,7 +650,7 @@ fund trading subaccounts, and submit signed trading commands.</p>
 <p>Your Fogo Ed25519 wallet public key identifies your Superluminal account. Each
 wallet can own multiple numbered trading subaccounts. Authentication proves
 control of the wallet; signed commands identify the target subaccount.</p>
-<p>Fund the wallet before starting a trading client. The public gateway permits
+<p>Request testnet collateral before placing orders. The public gateway permits
 one authenticated WebSocket session per wallet, so a newer session preempts an
 older one.</p>
 

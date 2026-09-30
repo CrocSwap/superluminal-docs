@@ -37,25 +37,24 @@ until the basic lifecycle below passes end to end.
 - Treat `session_preempted` as terminal. Do not reconnect in a loop while
   another process owns the wallet session.
 
-## Create and fund the account
+## Prepare and fund the account
 
-Funding is a multi-system workflow, not a successful faucet HTTP call.
+Testnet collateral is provided by the Superluminal team through the channel
+used to onboard the user.
 
 1. Generate and securely store a Solana-format Ed25519 keypair.
-2. Open the funding WebSocket and complete `auth_wallet` / `auth_response`.
-3. Before `subscribe_account`, send `user_deposit_address` for subaccount `0`.
-4. Wait for the matching `UserDepositAddressStatus`. A successful registration
-   does not emit a generic accepted acknowledgement.
-5. Derive the CREATE2 address from `GET /v1/evm/addresses`. Never hardcode it.
-6. Request the public testnet faucet mint and confirm the Arbitrum Sepolia EVM
-   receipt.
-7. Confirm `UserCollateralUpdate` or a fresh `AccountSnapshot` proves trading
-   collateral was credited.
+2. Request testnet funds from Superluminal using only the public Fogo wallet
+   address and intended subaccount ID. Never send the keypair.
+3. If the team requests an EVM deposit address, authenticate on a separate
+   WebSocket, send `user_deposit_address` before `subscribe_account`, and wait
+   for the matching `UserDepositAddressStatus`. Registration does not emit a
+   generic accepted acknowledgement. Derive the CREATE2 address from
+   `GET /v1/evm/addresses` and give the address to the team.
+4. After the team confirms funding, connect the trading client and verify that
+   `UserCollateralUpdate` or a fresh `AccountSnapshot` shows credited collateral.
 
-An EVM receipt is not proof of credited trading collateral. Before repeating a
-faucet request after a timeout, inspect its transaction hash and fresh account
-state so the agent does not duplicate an in-flight funding attempt. Fund
-multiple wallets serially.
+An EVM receipt alone is not proof of credited trading collateral. Do not place
+orders until the private account stream confirms the balance.
 
 ## Readiness gate
 
@@ -122,10 +121,11 @@ through `18446744073709551615`.
 The build is complete only when a fresh wallet can perform this sequence using
 only this directory:
 
-1. Register the deposit address and wait for `UserDepositAddressStatus`.
-2. Request faucet funds, confirm the EVM receipt, and confirm credited trading
-   collateral.
-3. Connect the client, validate `AccountSnapshot`, and synchronize market data.
+1. Request testnet funds from Superluminal; register a deposit address if the
+   team asks for one.
+2. Connect the client, validate `AccountSnapshot`, and confirm credited trading
+   collateral in the private account stream.
+3. Synchronize market data and reconcile working orders.
 4. Place one small price-bounded testnet order and observe the authoritative
    lifecycle, including partial and settlement events when present.
 5. Cancel or flatten, close gracefully, reconnect, and prove there are no

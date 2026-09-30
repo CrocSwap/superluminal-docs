@@ -439,10 +439,10 @@
 </li>
 
         <li class="md-nav__item">
-  <a href="#install-the-funding-utilities" class="md-nav__link">
+  <a href="#install-the-deposit-address-utility" class="md-nav__link">
     <span class="md-ellipsis">
 
-        Install the funding utilities
+        Install the deposit-address utility
 
     </span>
   </a>
@@ -450,10 +450,10 @@
 </li>
 
         <li class="md-nav__item">
-  <a href="#fund-with-the-public-testnet-faucet" class="md-nav__link">
+  <a href="#request-testnet-collateral" class="md-nav__link">
     <span class="md-ellipsis">
 
-        Fund with the public testnet faucet
+        Request testnet collateral
 
     </span>
   </a>
@@ -476,17 +476,6 @@
     <span class="md-ellipsis">
 
         How the deposit address is derived
-
-    </span>
-  </a>
-
-</li>
-
-        <li class="md-nav__item">
-  <a href="#faucet-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-
-        Faucet errors
 
     </span>
   </a>
@@ -593,10 +582,10 @@
 </li>
 
         <li class="md-nav__item">
-  <a href="#install-the-funding-utilities" class="md-nav__link">
+  <a href="#install-the-deposit-address-utility" class="md-nav__link">
     <span class="md-ellipsis">
 
-        Install the funding utilities
+        Install the deposit-address utility
 
     </span>
   </a>
@@ -604,10 +593,10 @@
 </li>
 
         <li class="md-nav__item">
-  <a href="#fund-with-the-public-testnet-faucet" class="md-nav__link">
+  <a href="#request-testnet-collateral" class="md-nav__link">
     <span class="md-ellipsis">
 
-        Fund with the public testnet faucet
+        Request testnet collateral
 
     </span>
   </a>
@@ -636,17 +625,6 @@
 
 </li>
 
-        <li class="md-nav__item">
-  <a href="#faucet-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-
-        Faucet errors
-
-    </span>
-  </a>
-
-</li>
-
     </ul>
 
 </nav>
@@ -665,9 +643,9 @@
 
 
 <h1 id="funding-accounts">Funding Accounts<a class="headerlink" href="#funding-accounts" title="Permanent link">&para;</a></h1>
-<p>A Superluminal account is identified by a Fogo Ed25519 wallet. Collateral is
-credited to a numbered trading subaccount after an EVM deposit is observed and
-settled on Fogo.</p>
+<p>A Superluminal account is identified by a Fogo Ed25519 wallet. Testnet
+collateral is provisioned by Superluminal. Manual EVM deposits are credited to
+a numbered trading subaccount after settlement on Fogo.</p>
 <p>The Fogo wallet and the EVM wallet have different roles:</p>
 <ul>
 <li>The <strong>Fogo wallet</strong> authenticates the Superluminal account and selects the
@@ -675,7 +653,7 @@ settled on Fogo.</p>
 <li>The <strong>EVM wallet</strong> sends collateral and pays EVM gas for manual deposits. It
   does not need to have the same address or private key as the Fogo wallet.</li>
 </ul>
-<p>Never send collateral until Superluminal has confirmed that the derived
+<p>Never send a manual deposit until Superluminal has confirmed that the derived
 deposit address is registered.</p>
 <h2 id="keypair-format">Keypair format<a class="headerlink" href="#keypair-format" title="Permanent link">&para;</a></h2>
 <p>The utilities accept a Solana-format Ed25519 keypair JSON file: a JSON array of
@@ -683,10 +661,10 @@ deposit address is registered.</p>
 <p>Protect the file as a private key. The utilities load it locally and use it
 only to sign the WebSocket authentication challenge; the private key is never
 sent to Superluminal.</p>
-<h2 id="install-the-funding-utilities">Install the funding utilities<a class="headerlink" href="#install-the-funding-utilities" title="Permanent link">&para;</a></h2>
-<p>The C++ and Python client bundles include cross-platform source utilities under
-<code>funding-tools</code>. They run with Bun on Linux, macOS, and Windows; no prebuilt
-executable is distributed.</p>
+<h2 id="install-the-deposit-address-utility">Install the deposit-address utility<a class="headerlink" href="#install-the-deposit-address-utility" title="Permanent link">&para;</a></h2>
+<p>The C++ and Python client bundles include a cross-platform deposit-address
+utility under <code>funding-tools</code>. It runs with Bun on Linux, macOS, and Windows;
+no prebuilt executable is distributed.</p>
 <p>Requirements:</p>
 <ul>
 <li>a supplied C++ or Python client bundle;</li>
@@ -697,61 +675,40 @@ executable is distributed.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>funding-tools
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bun<span class="w"> </span>install<span class="w"> </span>--production<span class="w"> </span>--frozen-lockfile
 </code></pre></div>
-<h2 id="fund-with-the-public-testnet-faucet">Fund with the public testnet faucet<a class="headerlink" href="#fund-with-the-public-testnet-faucet" title="Permanent link">&para;</a></h2>
-<p>From the bundle's <code>funding-tools</code> directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bun<span class="w"> </span>run<span class="w"> </span>fund:testnet<span class="w"> </span>--keypair<span class="w"> </span>/path/to/wallet.json
-</code></pre></div>
-<p>The command:</p>
-<ol>
-<li>authenticates the Fogo wallet through <code>wss://testnet.slx.fi/ws</code>;</li>
-<li>subscribes to trading subaccount <code>0</code>;</li>
-<li>sends <code>user_deposit_address</code> and waits for
-   <code>UserDepositAddressStatus</code>;</li>
-<li>derives the Arbitrum Sepolia deposit address;</li>
-<li>requests testnet USDC from the public faucet; and</li>
-<li>waits for <code>UserCollateralUpdate</code> to confirm that the trading balance
-   increased.</li>
-</ol>
-<p>Successful output has this form:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Fogo account:        &lt;base58 wallet address&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Subaccount:          0
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>EVM deposit address: &lt;0x deposit address&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Faucet transaction:  &lt;0x transaction hash&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Trading balance:     10,000 USDC
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Funding complete.
-</code></pre></div>
-<p><code>Funding complete.</code> confirms settlement into the trading account, not merely
-submission of an EVM transaction.</p>
-<p>The faucet funds subaccount <code>0</code> only. It currently mints <code>10,000</code> testnet USDC
-when the subaccount has no open positions, the wallet has no vault-participant
-shares, and settled collateral plus pending EVM deposits is below <code>1,000</code> USDC.
-An ineligible account receives HTTP <code>403</code>.</p>
-<p>Run the utility before starting the C++ or Python client for the same wallet.
-The funding session would otherwise preempt the client's authenticated session.
-The utility closes its own session before exiting.</p>
-<p>Run <code>bun run fund:testnet --help</code> for endpoint and timeout overrides.</p>
+<h2 id="request-testnet-collateral">Request testnet collateral<a class="headerlink" href="#request-testnet-collateral" title="Permanent link">&para;</a></h2>
+<p>Ask the Superluminal team for testnet funds through the channel used to onboard
+you. Provide your <strong>public Fogo wallet address</strong> and intended subaccount ID;
+never send your keypair or private key. If the team asks for a registered EVM
+deposit address, prepare it with <code>deposit:address</code> below and provide the
+printed address.</p>
+<p>After the team confirms funding, connect the trading client with the same
+wallet and subaccount. Wait for <code>UserCollateralUpdate</code> or a fresh
+<code>AccountSnapshot</code> showing the credited collateral before placing an order. An
+EVM transaction receipt alone does not prove that the trading balance was
+credited.</p>
 <h2 id="derive-an-address-for-a-manual-deposit">Derive an address for a manual deposit<a class="headerlink" href="#derive-an-address-for-a-manual-deposit" title="Permanent link">&para;</a></h2>
-<p>Use <code>deposit:address</code> for production or any manual ERC20 deposit. This command
-registers the Fogo wallet and subaccount, derives the corresponding EVM
-destination, and prints the authoritative EVM network and collateral token. It
-does not request an EVM private key or transfer funds.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>bun<span class="w"> </span>run<span class="w"> </span>deposit:address<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--keypair<span class="w"> </span>/path/to/fogo-wallet.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--gateway<span class="w"> </span>https://gateway.example<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--evm-rpc<span class="w"> </span>https://evm-rpc.example<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--partition-id<span class="w"> </span>&lt;u16&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--subaccount<span class="w"> </span>&lt;u64&gt;
+<p>Use <code>deposit:address</code> when Superluminal asks for a registered address or for a
+manual ERC20 deposit. This command registers the Fogo wallet and subaccount,
+derives the corresponding EVM destination, and prints the authoritative EVM
+network and collateral token. It does not request an EVM private key or
+transfer funds.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>bun<span class="w"> </span>run<span class="w"> </span>deposit:address<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--keypair<span class="w"> </span>/path/to/fogo-wallet.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--gateway<span class="w"> </span>https://gateway.example<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--evm-rpc<span class="w"> </span>https://evm-rpc.example<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--partition-id<span class="w"> </span>&lt;u16&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--subaccount<span class="w"> </span>&lt;u64&gt;
 </code></pre></div>
 <p>Use the gateway origin, EVM RPC, and partition ID supplied for the same
-deployment. The gateway accepts subaccount IDs <code>0..31</code>; the public faucet
-funds only <code>0</code>. Successful output has this form:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Fogo account:        &lt;base58 wallet address&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Subaccount:          &lt;subaccount id&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>EVM chain ID:        &lt;decimal chain id&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Collateral token:    &lt;0x ERC20 address&gt;
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>EVM deposit address: &lt;0x deposit address&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Deposit address ready.
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Transfer only the listed collateral token on the listed EVM chain.
+deployment. The gateway accepts subaccount IDs <code>0..31</code>. Successful output has
+this form:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Fogo account:        &lt;base58 wallet address&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Subaccount:          &lt;subaccount id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>EVM chain ID:        &lt;decimal chain id&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Collateral token:    &lt;0x ERC20 address&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>EVM deposit address: &lt;0x deposit address&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Deposit address ready.
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Transfer only the listed collateral token on the listed EVM chain.
 </code></pre></div>
 <p>After <code>Deposit address ready.</code>:</p>
 <ol>
@@ -768,11 +725,11 @@ the trading balance was credited. Sending on another chain or sending another
 token will not fund the account.</p>
 <h2 id="how-the-deposit-address-is-derived">How the deposit address is derived<a class="headerlink" href="#how-the-deposit-address-is-derived" title="Permanent link">&para;</a></h2>
 <p>The deposit address is deterministic for a Fogo wallet and subaccount:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>salt = keccak256(fogo_wallet_bytes || uint64_be(subaccount_id))
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>deposit_address = last20bytes(
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  keccak256(0xff || evm_vault || salt || user_deposit_init_code_hash)
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>salt = keccak256(fogo_wallet_bytes || uint64_be(subaccount_id))
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>deposit_address = last20bytes(
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  keccak256(0xff || evm_vault || salt || user_deposit_init_code_hash)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>)
 </code></pre></div>
 <p>Inputs:</p>
 <ul>
@@ -784,25 +741,16 @@ token will not fund the account.</p>
 <p>Fetch those values from the same HTTP origin used for the WebSocket connection.
 Do not hardcode deployment addresses.</p>
 <p>Before transferring collateral, authenticate the Fogo wallet and send:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_deposit_address"</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">"subaccount_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_deposit_address"</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"subaccount_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>Wait for the matching <code>UserDepositAddressStatus</code>. Registration success does not
 emit a generic <code>ack accepted</code>; validation or forwarding failures emit
 <code>ack rejected</code> or <code>ack busy</code>.</p>
 <p>See <a href="api.html#user_deposit_address"><code>user_deposit_address</code></a> for the full wire
 contract.</p>
-<h2 id="faucet-errors">Faucet errors<a class="headerlink" href="#faucet-errors" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>400</code>: malformed request, or the deposit address does not belong to the
-  supplied wallet.</li>
-<li><code>403</code>: the subaccount has open positions, the wallet has vault-participant
-  shares, or settled collateral plus pending deposits is at least <code>1,000</code> USDC.</li>
-<li><code>502</code>: an EVM or Fogo RPC operation failed.</li>
-</ul>
-<p>The public faucet does not require an EVM wallet or EVM gas.</p>
 
 
 

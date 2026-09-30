@@ -851,18 +851,13 @@ does not modify the system Python installation.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./.venv/bin/sl-tui<span class="w"> </span>--version
 </code></pre></div>
 <h2 id="fund-the-wallet">Fund the wallet<a class="headerlink" href="#fund-the-wallet" title="Permanent link">&para;</a></h2>
-<p>The bundle includes the source funding utility. From <code>python_gateway_client</code>,
-fund subaccount <code>0</code> before starting the Python client:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>funding-tools
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bun<span class="w"> </span>install<span class="w"> </span>--production<span class="w"> </span>--frozen-lockfile
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>bun<span class="w"> </span>run<span class="w"> </span>fund:testnet<span class="w"> </span>--keypair<span class="w"> </span>/path/to/wallet.json
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">cd</span><span class="w"> </span>..
-</code></pre></div>
-<p>Wait for <code>Funding complete.</code>. Do not run the funding utility while the Python
-client is connected: the public gateway permits one authenticated session per
-wallet, so the newer session would preempt the older one.</p>
-<p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
-derivation, faucet limits, and manual deposits.</p>
+<p>Request testnet collateral from Superluminal through your onboarding channel.
+Provide your public Fogo wallet address and intended subaccount, never your
+keypair. If asked to register an EVM deposit address, run the bundle's
+<code>deposit:address</code> command from <code>funding-tools</code> before starting the client. Its
+authenticated session would otherwise preempt the client's session.</p>
+<p>See <a href="../funding.html">Funding accounts</a> for the request, deposit-address, and
+balance-verification steps.</p>
 <h2 id="find-active-markets">Find active markets<a class="headerlink" href="#find-active-markets" title="Permanent link">&para;</a></h2>
 <p>Read symbology from the gateway's initial WebSocket snapshot before choosing
 <code>--feed-id</code> values.</p>
@@ -872,14 +867,14 @@ derivation, faucet limits, and manual deposits.</p>
 prices and quantities to raw wire integers.</p>
 <h2 id="start-the-tui">Start the TUI<a class="headerlink" href="#start-the-tui" title="Permanent link">&para;</a></h2>
 <p>From <code>python_gateway_client</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./.venv/bin/sl-tui<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--keypair<span class="w"> </span>./wallet.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--subaccount<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--partition-id<span class="w"> </span>0x01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./.venv/bin/sl-tui<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--keypair<span class="w"> </span>./wallet.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--subaccount<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--partition-id<span class="w"> </span>0x01
 </code></pre></div>
 <p>Arguments:</p>
 <ul>
@@ -986,9 +981,9 @@ without using Textual.</p>
 <li>Check <code>https://testnet.slx.fi/healthz</code> returns <code>ok</code>.</li>
 <li>Connect to the WebSocket and select active market IDs from its snapshot.</li>
 <li>Install the client with <code>./scripts/bootstrap_venv.sh</code>.</li>
-<li>Fund the wallet and wait for <code>Funding complete.</code>.</li>
+<li>Request testnet collateral from Superluminal.</li>
 <li>Start <code>sl-tui</code> with the same keypair and subaccount <code>0</code>.</li>
-<li>Confirm <code>AccountSnapshot</code> and market data appear.</li>
+<li>Confirm credited collateral in <code>AccountSnapshot</code> and synchronize market data.</li>
 <li>Submit a small order and observe its private lifecycle events.</li>
 <li>Cancel it if it remains working.</li>
 </ol>
@@ -998,8 +993,8 @@ without using Textual.</p>
 <li><strong>Configured feed missing:</strong> reconnect and use active IDs from the snapshot.</li>
 <li><strong>Invalid price grid:</strong> encode the price using current <code>px_exponent</code> and
   <code>tick_size</code>.</li>
-<li><strong>Missing balance:</strong> complete funding and wait for
-  <code>UserCollateralUpdate</code> before starting the client.</li>
+<li><strong>Missing balance:</strong> ask Superluminal to confirm funding, then wait for
+  <code>UserCollateralUpdate</code> or a fresh <code>AccountSnapshot</code> before trading.</li>
 <li><strong>Book reset:</strong> discard the affected book and resubscribe; the reference
   client does this automatically.</li>
 </ul>

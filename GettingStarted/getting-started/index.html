@@ -603,8 +603,8 @@
 <h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
 <p>The supported path to a first Superluminal testnet trade is to use one of the
 tested reference-client bundles. Each bundle contains its client source, this
-generated documentation site, conformance vectors, and the same prefunding
-utilities.</p>
+generated documentation site, conformance vectors, and a deposit-address
+utility.</p>
 <h2 id="choose-a-client">Choose a client<a class="headerlink" href="#choose-a-client" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="cpp.html">C++ reference client</a>: build the terminal client from source.</li>
@@ -629,18 +629,20 @@ verify signing and lossless unsigned 64-bit decoding.</p>
 <li>Download and verify one client bundle.</li>
 <li>Generate a new Solana-format Ed25519 keypair. Never use a bundled or shared
    key.</li>
-<li>Follow <a href="../funding.html">Funding accounts</a> and wait for <code>Funding complete.</code>.</li>
+<li>Follow <a href="../funding.html">Funding accounts</a> to request testnet collateral from
+   Superluminal.</li>
 <li>Follow the selected <a href="cpp.html">C++</a> or <a href="python.html">Python</a> guide to connect the
    same wallet and subaccount <code>0</code>.</li>
-<li>Wait for <code>AccountSnapshot</code> and synchronized market data.</li>
+<li>Wait for <code>AccountSnapshot</code>, confirm credited collateral, and synchronize
+   market data.</li>
 <li>Submit a small, explicitly price-bounded LIMIT or IOC order using current
    symbology.</li>
 <li>Observe <code>OrderAccepted</code> or <code>OrderReject</code> and any fill settlement events.</li>
 <li>Cancel a working order, reconnect, and reconcile account state.</li>
 </ol>
 <p>The public gateway permits one authenticated WebSocket session per wallet.
-Run the funding utility before the trading client; a second authenticated
-session preempts the first.</p>
+If asked to register a deposit address, run the deposit-address utility before
+the trading client; a second authenticated session preempts the first.</p>
 <h2 id="build-a-custom-client">Build a custom client<a class="headerlink" href="#build-a-custom-client" title="Permanent link">&para;</a></h2>
 <p>The bundles are the executable examples and signing implementations. Use the
 <a href="../api.html">public API reference</a> for the underlying HTTP, WebSocket, and wire
