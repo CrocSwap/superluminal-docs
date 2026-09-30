@@ -473,6 +473,33 @@
 
 
     <li class="md-nav__item">
+      <a href="tp-sl-and-reduce-only.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
       <a href="api.html" class="md-nav__link">
 
 
@@ -580,6 +607,8 @@ fund trading subaccounts, and submit signed trading commands.</p>
 <li><a href="getting-started/python.html">Python reference client</a>: install and run the Python client and TUI.</li>
 <li><a href="funding.html">Fund an account</a>: use the public testnet faucet or prepare an
   address for a manual collateral transfer.</li>
+<li><a href="tp-sl-and-reduce-only.html">TP/SL and reduce-only</a>: protect position quantity,
+  handle manual closes, and reconcile conditional exits.</li>
 <li><a href="api.html">Public API</a>: HTTP and WebSocket requests, responses, pagination, and
   rejection reasons.</li>
 </ul>
@@ -618,8 +647,8 @@ fund trading subaccounts, and submit signed trading commands.</p>
 </tr>
 </tbody>
 </table>
-<p>Fetch market identifiers and scaling metadata from
-<code>GET https://testnet.slx.fi/v1/symbology</code>. Fetch EVM contract addresses from
+<p>Read market identifiers and scaling metadata from the initial
+<code>SymbologySnapshot</code> on <code>wss://testnet.slx.fi/ws</code>. Fetch EVM contract addresses from
 <code>GET https://testnet.slx.fi/v1/evm/addresses</code>; do not hardcode them.</p>
 <h2 id="account-identity">Account identity<a class="headerlink" href="#account-identity" title="Permanent link">&para;</a></h2>
 <p>Your Fogo Ed25519 wallet public key identifies your Superluminal account. Each

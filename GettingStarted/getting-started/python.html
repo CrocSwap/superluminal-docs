@@ -494,6 +494,17 @@
 </li>
 
         <li class="md-nav__item">
+  <a href="#tpsl-and-reduce-only" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        TP/SL and reduce-only
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
   <a href="#reuse-the-client-modules" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -557,6 +568,33 @@
 
 
     Funding Accounts
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../tp-sl-and-reduce-only.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
 
 
 
@@ -722,6 +760,17 @@
 </li>
 
         <li class="md-nav__item">
+  <a href="#tpsl-and-reduce-only" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        TP/SL and reduce-only
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
   <a href="#reuse-the-client-modules" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -815,23 +864,22 @@ wallet, so the newer session would preempt the older one.</p>
 <p>See <a href="../funding.html">Funding accounts</a> for keypair requirements, deposit-address
 derivation, faucet limits, and manual deposits.</p>
 <h2 id="find-active-markets">Find active markets<a class="headerlink" href="#find-active-markets" title="Permanent link">&para;</a></h2>
-<p>Fetch symbology before choosing <code>--feed-id</code> values:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>--fail<span class="w"> </span>https://testnet.slx.fi/v1/symbology
-</code></pre></div>
+<p>Read symbology from the gateway's initial WebSocket snapshot before choosing
+<code>--feed-id</code> values.</p>
 <p>At the time of writing, public testnet exposes BTC (<code>1</code>), ETH (<code>2</code>), and SOL
 (<code>6</code>). Treat the response as authoritative because markets and IDs may change.</p>
 <p>Use <code>px_exponent</code>, <code>tick_size</code>, and <code>size_decimals</code> when converting human
 prices and quantities to raw wire integers.</p>
 <h2 id="start-the-tui">Start the TUI<a class="headerlink" href="#start-the-tui" title="Permanent link">&para;</a></h2>
 <p>From <code>python_gateway_client</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./.venv/bin/sl-tui<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--keypair<span class="w"> </span>./wallet.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--subaccount<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--partition-id<span class="w"> </span>0x01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./.venv/bin/sl-tui<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--ws<span class="w"> </span>wss://testnet.slx.fi/ws<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--keypair<span class="w"> </span>./wallet.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--subaccount<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--feed-id<span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--partition-id<span class="w"> </span>0x01
 </code></pre></div>
 <p>Arguments:</p>
 <ul>
@@ -841,12 +889,13 @@ prices and quantities to raw wire integers.</p>
 <li><code>--subaccount</code>: trading subaccount displayed by the application.</li>
 <li><code>--feed-id</code>: market ID to subscribe to; repeat it for each market.</li>
 <li><code>--partition-id</code>: signed-message partition; public testnet uses <code>0x01</code>.</li>
-<li><code>--auth-expiry-seconds</code>: optional nonzero authentication lifetime.</li>
+<li><code>--auth-expiry-seconds</code>: authentication lifetime in seconds; the default is
+  <code>0</code> (no session expiry). A nonzero value must be greater than <code>60</code>.</li>
 </ul>
 <h2 id="connection-flow">Connection flow<a class="headerlink" href="#connection-flow" title="Permanent link">&para;</a></h2>
 <p>The client performs these steps automatically:</p>
 <ol>
-<li>Fetch <code>GET /v1/symbology</code>.</li>
+<li>Read the initial WebSocket <code>SymbologySnapshot</code>.</li>
 <li>Send <code>auth_wallet</code> with the wallet public key.</li>
 <li>Sign the returned <code>auth_challenge</code> locally.</li>
 <li>Send <code>auth_response</code> and wait for <code>ack accepted</code>.</li>
@@ -865,6 +914,12 @@ funding, modifications, and cancellations.</p>
 <p>The Python client synchronizes the views independently and combines them in
 the ladder. It also consumes <code>Trade</code> events. If it receives <code>stream_reset</code>, it
 discards the affected local book and resubscribes.</p>
+<p>Use the API's <a href="../api.html#book-synchronization-and-recovery">book recovery rules</a>
+for cursor continuity and absolute level updates, and
+<a href="../api.html#account-synchronization-and-recovery">account recovery rules</a> for
+snapshot boundaries, settlement, and command reconciliation after disconnects.
+Collateral, fees, PnL, and funding amounts use a separate fixed six-decimal USD
+scale; see <a href="../api.html#numeric-units">Numeric units</a>.</p>
 <h2 id="submit-an-order">Submit an order<a class="headerlink" href="#submit-an-order" title="Permanent link">&para;</a></h2>
 <p>The order ticket creates and signs a <code>signed_order</code> proof locally. Choose:</p>
 <ul>
@@ -887,10 +942,33 @@ private account stream:</p>
 <li><code>Fill</code>, <code>FillSettled</code>, and <code>FillBusted</code> report execution and settlement.</li>
 </ul>
 <h2 id="modify-or-cancel-an-order">Modify or cancel an order<a class="headerlink" href="#modify-or-cancel-an-order" title="Permanent link">&para;</a></h2>
-<p>Select a working order in the TUI to modify or cancel it. The client signs the
-corresponding command and waits for <code>ModifyAck</code>, <code>ModifyReject</code>, <code>CancelAck</code>, or
-<code>CancelReject</code> on the account stream.</p>
+<p>Press <strong>Modify</strong> beside a live GTC limit or mark-to-mid order. Edit its price
+or delta, and its remaining quantity, then press <strong>Apply Modify</strong>. Quantity
+may stay the same or decrease; increase it by cancelling and replacing the
+order. IOC and market orders cannot be modified. The client preserves the
+order's normal or reduce-only execution mode, including after reconnect.
+Press <strong>Cancel</strong> beside a working order to cancel it. Confirm <code>ModifyAck</code>,
+<code>ModifyReject</code>, <code>CancelAck</code>, or <code>CancelReject</code> on the account stream.</p>
+<h2 id="tpsl-and-reduce-only">TP/SL and reduce-only<a class="headerlink" href="#tpsl-and-reduce-only" title="Permanent link">&para;</a></h2>
+<p>Choose <strong>Reduce only</strong> under Execution to submit an ordinary reducing order.
+For TP/SL, choose the exit side, enter the protected Qty and a TP price, SL
+price, or both, choose Immediate or Parent fill, then press <strong>Create TP/SL</strong>.
+Each submission creates one group; repeat with different prices and quantities
+for multiple groups. Approved group IDs appear in Positions.</p>
+<p>For Parent fill, wait for <code>ConditionalApproved</code>, enter its group ID, set the
+ordinary order ticket to the opposite side with quantity at least the group's,
+choose Normal execution, and press <strong>Submit Parent</strong>. One parent can bind to
+one group; only settled fills up to the group's quantity gain protection.
+Enter a group ID and press <strong>Cancel TP/SL</strong> to cancel a dormant group or an
+accepted active child. Confirm the lifecycle event on the account stream.</p>
 <h2 id="reuse-the-client-modules">Reuse the client modules<a class="headerlink" href="#reuse-the-client-modules" title="Permanent link">&para;</a></h2>
+<p><code>GatewayClient.submit_order</code> accepts <code>OrderDraft.execution_mode =
+ExecutionMode.REDUCE_ONLY</code>. <code>submit_conditional_group</code> accepts a
+<code>ConditionalGroupDraft</code> for immediate or parent-fill protection;
+<code>submit_conditional_parent</code> binds a normal order after approval, and
+<code>cancel_conditional_group</code> cancels the group or active child. Account snapshots
+and conditional lifecycle events maintain <code>subaccounts[].conditional_groups</code>
+for reconnect reconciliation. See <a href="../tp-sl-and-reduce-only.html">TP/SL and reduce-only</a>.</p>
 <p>The reference implementation is split into reusable modules under <code>dfba_client</code>:</p>
 <ul>
 <li><code>GatewayClient</code> handles authentication, subscriptions, orders, modifies,
@@ -906,7 +984,7 @@ without using Textual.</p>
 <h2 id="first-run-checklist">First-run checklist<a class="headerlink" href="#first-run-checklist" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Check <code>https://testnet.slx.fi/healthz</code> returns <code>ok</code>.</li>
-<li>Fetch <code>/v1/symbology</code> and select active market IDs.</li>
+<li>Connect to the WebSocket and select active market IDs from its snapshot.</li>
 <li>Install the client with <code>./scripts/bootstrap_venv.sh</code>.</li>
 <li>Fund the wallet and wait for <code>Funding complete.</code>.</li>
 <li>Start <code>sl-tui</code> with the same keypair and subaccount <code>0</code>.</li>
@@ -917,7 +995,7 @@ without using Textual.</p>
 <h2 id="common-problems">Common problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Session preempted:</strong> another connection authenticated the same wallet.</li>
-<li><strong>Configured feed missing:</strong> refresh <code>/v1/symbology</code> and use active IDs.</li>
+<li><strong>Configured feed missing:</strong> reconnect and use active IDs from the snapshot.</li>
 <li><strong>Invalid price grid:</strong> encode the price using current <code>px_exponent</code> and
   <code>tick_size</code>.</li>
 <li><strong>Missing balance:</strong> complete funding and wait for

@@ -1,19 +1,19 @@
 {
-  "aethon_commit": "7b208c4c5d595f12b5292a481ed97d226abc78d2",
-  "aethon_git_tree": "fd0c09c628aa4c1793bed329c8b45b05f2f2590b",
+  "aethon_commit": "cde7384e3b6c76807d967174075f0ae11e05b74f",
+  "aethon_git_tree": "73cab9f21d0c550cb294a9abd3a4293fe77bd318",
   "aethon_version": "1.0.0",
   "artifacts": [
     {
       "name": "superluminal-cpp-client.zip",
-      "sha256": "bf6bf448b0a648651314906da6478a692c43e89d6cb80cc85e9bd6bb3d0b54be",
-      "size_bytes": 3351272
+      "sha256": "fb24f87b513337c649d7818090afc61f125799249d2ac59b45ae10b5b9069160",
+      "size_bytes": 3430974
     },
     {
       "name": "superluminal-python-client.zip",
-      "sha256": "f87acb64bb3e36675c23e6740571e4c6b2dd3a3037a16f5bd0b2c5ee2f171227",
-      "size_bytes": 997025
+      "sha256": "2e24e6c84e255e82da5bc7abdc035c0f386b63308b5577f3b2be96b85d944bf6",
+      "size_bytes": 1085069
     }
   ],
-  "build_timestamp_utc": "2026-08-25T01:02:26Z",
-  "source_tree_state": "dirty-preview"
+  "build_timestamp_utc": "2026-09-30T19:16:21Z",
+  "source_tree_state": "clean"
 }

@@ -1,0 +1,1049 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <meta name="description" content="Public Superluminal API and client documentation">
+
+
+
+
+        <link rel="prev" href="funding.html">
+
+
+        <link rel="next" href="api.html">
+
+
+
+
+
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+
+
+
+        <title>TP/SL and Reduce-only - Superluminal API Documentation</title>
+
+
+
+      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+
+
+
+
+
+
+
+
+
+
+
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+
+
+
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+
+
+
+
+
+  </head>
+
+
+    <body dir="ltr">
+
+
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+
+
+        <a href="#tpsl-and-reduce-only" class="md-skip">
+          Skip to content
+        </a>
+
+    </div>
+    <div data-md-component="announce">
+
+    </div>
+
+
+
+
+
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Superluminal API Documentation" class="md-header__button md-logo" aria-label="Superluminal API Documentation" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Superluminal API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+
+              TP/SL and Reduce-only
+
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+
+
+
+
+
+        <label class="md-header__button md-icon" for="__search">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </nav>
+
+</header>
+
+    <div class="md-container" data-md-component="container">
+
+
+
+
+
+
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+
+
+
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Superluminal API Documentation" class="md-nav__button md-logo" aria-label="Superluminal API Documentation" data-md-component="logo">
+
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Superluminal API Documentation
+  </label>
+
+  <ul class="md-nav__list" data-md-scrollfix>
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Overview
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+
+
+
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+
+
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Getting Started
+
+
+
+  </span>
+
+
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+
+
+    Getting Started
+
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="getting-started/index.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Quickstart
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="getting-started/cpp.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    C++ Reference Client
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="getting-started/python.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Python Reference Client
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+          </ul>
+        </nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="funding.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Funding Accounts
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item md-nav__item--active">
+
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+
+
+
+
+
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
+
+
+
+  </span>
+
+
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+
+      <a href="tp-sl-and-reduce-only.html" class="md-nav__link md-nav__link--active">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
+
+
+
+  </span>
+
+
+
+      </a>
+
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+
+        <li class="md-nav__item">
+  <a href="#choose-an-activation-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Choose an activation mode
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Choose an activation mode">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#example-existing-exposure-plus-a-parent-order" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Example: existing exposure plus a parent order
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#submit-tpsl" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit TP/SL
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#trigger-prices-and-exit-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Trigger prices and exit orders
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Trigger prices and exit orders">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#rearming-remaining-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Rearming remaining protection
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#manual-trades-and-closing-the-position" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Manual trades and closing the position
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#change-or-cancel-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Change or cancel protection
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#submit-and-reconcile-reduce-only-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit and reconcile reduce-only orders
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#reference-client-support" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Reference-client support
+
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="api.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    Public API
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+
+
+
+
+
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+
+        <li class="md-nav__item">
+  <a href="#choose-an-activation-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Choose an activation mode
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Choose an activation mode">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#example-existing-exposure-plus-a-parent-order" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Example: existing exposure plus a parent order
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#submit-tpsl" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit TP/SL
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#trigger-prices-and-exit-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Trigger prices and exit orders
+
+    </span>
+  </a>
+
+    <nav class="md-nav" aria-label="Trigger prices and exit orders">
+      <ul class="md-nav__list">
+
+          <li class="md-nav__item">
+  <a href="#rearming-remaining-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Rearming remaining protection
+
+    </span>
+  </a>
+
+</li>
+
+      </ul>
+    </nav>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#manual-trades-and-closing-the-position" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Manual trades and closing the position
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#change-or-cancel-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Change or cancel protection
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#submit-and-reconcile-reduce-only-orders" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit and reconcile reduce-only orders
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
+  <a href="#reference-client-support" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Reference-client support
+
+    </span>
+  </a>
+
+</li>
+
+    </ul>
+
+</nav>
+                  </div>
+                </div>
+              </div>
+
+
+
+            <div class="md-content" data-md-component="content">
+
+              <article class="md-content__inner md-typeset">
+
+
+
+
+
+<h1 id="tpsl-and-reduce-only">TP/SL and Reduce-only<a class="headerlink" href="#tpsl-and-reduce-only" title="Permanent link">&para;</a></h1>
+<p>Take-profit (TP) and stop-loss (SL) groups create conditional exits from a
+symbol's net position in one trading subaccount. Each group has a quantity;
+it does not automatically resize to cover the entire position as other orders
+trade. Exits are reduce-only: they cannot increase exposure or reverse the
+position at settlement.</p>
+<h2 id="choose-an-activation-mode">Choose an activation mode<a class="headerlink" href="#choose-an-activation-mode" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>When protection starts</th>
+<th>Exit quantity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parent_fill</code> (<code>0</code> on the signed wire)</td>
+<td>After a bound parent fill settles successfully</td>
+<td>Settled parent fills, capped at signed group <code>qty</code>, less successfully settled exits</td>
+</tr>
+<tr>
+<td><code>immediate</code> (<code>1</code> on the signed wire)</td>
+<td>On approval, without a parent order</td>
+<td>Submitted <code>qty</code>, limited by the remaining position at settlement</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>immediate</code>, the subaccount must already have a position that the exit side
+reduces. The web trading application's <strong>Protect position</strong> action defaults to
+the full position size displayed at submission and accepts a smaller TP/SL
+quantity. Later unrelated fills do not resize that group.
+The web order form also accepts a TP/SL quantity in base units for a new
+parent order; leaving it blank uses the full parent quantity. TP alone, SL
+alone, or both can be submitted. A position may have multiple independently
+sized groups, each cancelled separately. Reduce-only settlement prevents
+their combined exits from reversing the position.</p>
+<p>For <code>parent_fill</code>, the parent must match the group's wallet, subaccount, and
+symbol, have at least the group's quantity, and have the opposite side.
+Protection grows only from that parent's successfully settled fills, capped at
+the signed group quantity. Parent fills beyond that cap are unprotected by this
+group. Existing exposure and fills from other orders are not added to the
+group's quantity. A provisional or busted parent fill does not add protection.</p>
+<h3 id="example-existing-exposure-plus-a-parent-order">Example: existing exposure plus a parent order<a class="headerlink" href="#example-existing-exposure-plus-a-parent-order" title="Permanent link">&para;</a></h3>
+<p>You are long 2 units and submit a buy parent for 1 with TP/SL. After it fills
+and settles, you are long 3, but that group has an exit quantity of 1. If its
+exit fully settles, you remain long 2. The exit reduces the net position;
+there is no separately identified lot being closed.</p>
+<p>To protect all 3 units, cancel the existing dormant group, wait for its
+cancellation, and submit an <code>immediate</code> group with <code>qty</code> corresponding to 3.
+Read the current account state before choosing that quantity.</p>
+<h2 id="submit-tpsl">Submit TP/SL<a class="headerlink" href="#submit-tpsl" title="Permanent link">&para;</a></h2>
+<p>Authenticate, subscribe to the account stream, and use current symbology to
+encode prices and quantities. The <a href="api.html#signed_conditional_group">conditional-group reference</a>
+defines the 196-byte signed proof, including its <code>activation_mode</code> byte.
+Enable TP, SL, or both. Disabled leg fields must be zero.</p>
+<p>For an existing position:</p>
+<ol>
+<li>Choose the opposite exit side: SELL for a long, BUY for a short.</li>
+<li>Sign a group with <code>activation_mode = 1</code>, the exit quantity, trigger prices,
+   trigger sources, and expiry.</li>
+<li>Send <code>signed_conditional_group</code> with JSON envelope <code>version: 1</code>.</li>
+<li>Wait for <code>ConditionalApproved</code>. Do not submit a parent.</li>
+</ol>
+<p>For activation by a new parent order:</p>
+<ol>
+<li>Sign and submit the group with <code>activation_mode = 0</code>.</li>
+<li>Wait for <code>ConditionalApproved</code> and retain its <code>group_external_order_id</code>.</li>
+<li>Send <a href="api.html#signed_conditional_parent">signed_conditional_parent</a> using
+   that group ID and a normal order proof with quantity at least the group's.</li>
+<li>Observe the parent's <code>OrderAccepted</code> or <code>OrderReject</code>, then settlement.
+   Triggers become eligible only after a successful parent settlement.</li>
+</ol>
+<p>A rejected binding does not cancel the group. For example, a parent quantity
+of 1 cannot bind to a group signed for 2; the group stays in <code>waiting_parent</code>.
+Submit an eligible parent or cancel that unused group. Rejection after successful
+binding instead completes an unprotected group with <code>ConditionalCompleted</code>.</p>
+<p>A disconnect or timeout does not establish whether a submission succeeded.
+Reconnect and reconcile the account snapshot and lifecycle events.</p>
+<h2 id="trigger-prices-and-exit-orders">Trigger prices and exit orders<a class="headerlink" href="#trigger-prices-and-exit-orders" title="Permanent link">&para;</a></h2>
+<p>Trigger sources are a bit mask: <code>1 = oracle</code>, <code>2 = completed-auction fill
+price</code>, <code>3 = either</code>. A selected source triggers when its observed price
+reaches or passes the threshold:</p>
+<table>
+<thead>
+<tr>
+<th>Position</th>
+<th>Exit side</th>
+<th>TP triggers</th>
+<th>SL triggers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Long</td>
+<td>SELL</td>
+<td>Price &gt;= TP price</td>
+<td>Price &lt;= SL price</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>BUY</td>
+<td>Price &lt;= TP price</td>
+<td>Price &gt;= SL price</td>
+</tr>
+</tbody>
+</table>
+<p>When both legs are enabled, SL must be below TP for a long position and above
+TP for a short position. Prices must satisfy the market price grid. The latest
+cached price is also evaluated when settled parent exposure becomes protected
+or residual exposure rearms.</p>
+<p>The selected leg becomes a <strong>TAKER, REDUCE_ONLY</strong> order:</p>
+<ul>
+<li>TP becomes a GTC limit order whose limit is the TP trigger price.</li>
+<li>SL becomes an unrestricted market IOC order (<code>price = 0</code>, <code>delta_ppm = 0</code>).
+  The trigger price is not a guaranteed execution price or a slippage bound.</li>
+</ul>
+<p>A TP child carries the group's signed expiry. An SL child has a matching
+deadline of the earlier of the group expiry and five seconds after activation;
+its unfilled remainder is cancelled after its eligible auction.</p>
+<p>When a leg triggers, its sibling is removed from trigger storage and emits a
+<code>CancelAck</code>. <code>ConditionalTriggered.selected_external_order_id</code> supplies the
+new active child ID, replacing the selected dormant leg ID. Use that ID for
+the child's ordinary <code>OrderAccepted</code>, fills, settlements, and cancellation.
+This applies on the first trigger and every later trigger. A trigger does not
+guarantee order admission or execution.</p>
+<p>After reconnecting, a snapshot group's <code>pending_leg</code>, when set to <code>1 = TP</code> or
+<code>2 = SL</code>, identifies the selected leg; that leg's external order ID is the
+active child ID. Reconcile working orders and lifecycle events to determine
+whether it is still live. Order history can associate children with their group through
+<code>conditional_group_external_order_id</code> and <code>conditional_leg</code> when available.</p>
+<h3 id="rearming-remaining-protection">Rearming remaining protection<a class="headerlink" href="#rearming-remaining-protection" title="Permanent link">&para;</a></h3>
+<p>Rearming restores conditional triggers after the active child has no remaining
+order quantity and all its matched fills have resolved. Both activation modes
+can rearm if protected quantity remains and the group has not been cancelled,
+invalidated, or expired. Failed child settlement does not consume protection.
+In <code>parent_fill</code> mode, parent fills settling while the child is active can also
+leave quantity for another cycle.</p>
+<p>For example, a buy parent for 2 units settles 1 and its TP child activates for
+1. The second parent unit settles while that child is active. Once the child
+fully matches and successfully settles its 1 unit, the group can rearm for
+the remaining 1.</p>
+<p>A partially matched TP remains a live GTC limit order; it does not create a
+second child while its remainder is live. If an SL matches only part of its
+quantity, cancellation of the unfilled IOC remainder terminates the group
+with <code>ConditionalCancelled</code>, after pending fills resolve. It does not rearm
+that cancelled remainder.</p>
+<p>Rearming emits <code>ConditionalApproved</code>. A parent-fill group with no protected
+quantity can instead wait for further parent fills in <code>waiting_fill</code> state.
+The next <code>ConditionalTriggered</code> supplies the new active child ID. Approval
+and snapshot <code>qty</code> fields retain the original signed group quantity; they do
+not report current remaining protection. The active child's <code>OrderAccepted</code>
+reports the quantity submitted for that trigger.</p>
+<h2 id="manual-trades-and-closing-the-position">Manual trades and closing the position<a class="headerlink" href="#manual-trades-and-closing-the-position" title="Permanent link">&para;</a></h2>
+<p>Unrelated normal trades do not resize or cancel a TP/SL group. Continuing the
+long-3 example above, a manual sell of 1 leaves you long 2 with the same
+1-unit group. A later fully settled TP/SL exit leaves you long 1.</p>
+<p>Alternatively, closing the full long-3 position behaves differently according
+to the manual order's mode:</p>
+<table>
+<thead>
+<tr>
+<th>Manual close</th>
+<th>TP/SL behavior after successful settlement makes the position flat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reduce-only sell 3</td>
+<td>Groups protecting that subaccount, symbol, and position direction are invalidated; active children are cancelled as part of resolution</td>
+</tr>
+<tr>
+<td>Normal sell 3</td>
+<td>The unrelated trade does not automatically cancel the groups; they can remain armed</td>
+</tr>
+</tbody>
+</table>
+<p>The web trading application's <strong>Close position</strong> action uses a reduce-only
+market IOC order. A partial reduce-only close that leaves exposure does not
+automatically resize unrelated groups.</p>
+<p>While flat, a remaining TP/SL exit cannot settle a new short position. If you
+open another long before the old group triggers or expires, that exit can
+reduce the new position. Explicitly cancel unwanted groups after a normal
+manual close, and confirm their lifecycle events before reusing the position.</p>
+<h2 id="change-or-cancel-protection">Change or cancel protection<a class="headerlink" href="#change-or-cancel-protection" title="Permanent link">&para;</a></h2>
+<p>Groups are immutable. Cancel and replace a group to change its quantity,
+trigger prices, sources, or expiry.</p>
+<ul>
+<li>Before activation, send <a href="api.html#signed_conditional_cancel">signed_conditional_cancel</a>
+  with the group ID and wait for <code>ConditionalCancelled</code>.</li>
+<li>After activation, cancel the live child with <code>signed_cancel</code> using the ID
+  from <code>ConditionalTriggered.selected_external_order_id</code>. A successful user
+  child cancellation terminates the bracket and prevents residual exposure
+  from rearming. A group cancel can
+  be rejected while activation is in progress.</li>
+<li>Cancelling a parent stops new fills. Successfully settled fills retain
+  protection; pending fills are resolved through settlement. If no protected
+  quantity or pending fills remain, the group completes.</li>
+<li>A successful parent modification invalidates its group. An already active
+  child remains an ordinary live order that the trader must monitor or cancel.</li>
+</ul>
+<p>Group expiry is at most 90 days after gateway admission. Dormant expiry emits
+<code>ConditionalExpired</code>; an active child's rejection or expiry terminates its
+group. Use <a href="api.html#subscribe_account-private-stream">account lifecycle events</a>
+and reconnect snapshots to reconcile state, rather than inferring group state
+from individual leg cancellations.</p>
+<h2 id="submit-and-reconcile-reduce-only-orders">Submit and reconcile reduce-only orders<a class="headerlink" href="#submit-and-reconcile-reduce-only-orders" title="Permanent link">&para;</a></h2>
+<p>Set <code>execution_mode = 4</code> inside the signed <code>ContractOrderV1</code> proof, then send
+the usual <a href="api.html#signed_order">signed_order</a> envelope. There is no top-level
+<code>reduce_only</code> request field. A modify must preserve the live order's execution
+mode; cancel and replace to change between normal and reduce-only.</p>
+<p>Reduce-only sells can settle only against a long position; buys can settle
+only against a short. Settlement clips a provisional match to the available
+reducing capacity of each reduce-only side, including zero while flat or when
+the position has the wrong direction. It never expands the submitted quantity.</p>
+<p>For example, if a provisional sell matches 2 units but the long position is
+only 1 at settlement, <code>FillSettled</code> reports <code>qty = 2</code>, <code>settled_qty = 1</code>, and
+<code>reduced_qty = 1</code>. The resulting position is flat. Fees are scaled to the
+settled quantity and reported in <code>applied_fee</code>.</p>
+<p>For these settlement events, reconcile positions and fees using <code>settled_qty</code>
+and <code>applied_fee</code>. <code>qty</code> and <code>fee</code> retain the provisional match and requested
+fee. <code>qty = settled_qty + reduced_qty</code>; reduced quantity is distinct from a
+failed-settlement <code>FillBusted</code>. The <code>reduce_only_leg</code>, <code>limiting_leg</code>, and
+<code>exhausted_leg</code> booleans describe this account's side of the settlement.</p>
+<h2 id="reference-client-support">Reference-client support<a class="headerlink" href="#reference-client-support" title="Permanent link">&para;</a></h2>
+<p>The C++ reference TUI supports immediate and parent-fill TP/SL, cancellation
+of existing groups or triggered children, and reduce-only order submission.
+See its <a href="getting-started/cpp.html">usage guide</a>. The Python reference TUI also
+supports these actions; see its <a href="getting-started/python.html">usage guide</a>.
+See the <a href="api.html">API reference</a> for the signed command formats.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </article>
+            </div>
+
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+
+      </main>
+
+        <footer class="md-footer">
+
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+
+
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+
+</div>
+
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+
+
+
+
+
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["content.code.copy", "navigation.sections", "navigation.top", "search.highlight"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+
+
+      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+
+
+  </body>
+</html>

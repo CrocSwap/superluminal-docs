@@ -8,13 +8,15 @@ client, a prefunded wallet, or unpublished deployment information.
 
 - Testnet only: `https://testnet.slx.fi` and `wss://testnet.slx.fi/ws`.
 - Read `api.html` for the public HTTP, WebSocket, and signed-wire contracts.
+- Read `api.html#numeric-units`, `api.html#private-order-and-fill-event-schemas`,
+  and both book/account recovery sections before implementing account state.
 - Read `funding.html` before funding a wallet.
 - In the hosted documentation tree, download a tested C++ or Python reference
   client from `downloads/` and verify it against `downloads/manifest.json`.
   Inside an extracted bundle, use the client source and `funding-tools/` next
   to this `docs/` directory; a nested `downloads/` directory is not expected.
 - Use `conformance/test-vectors.json` to verify signing and integer handling.
-- Fetch `/v1/symbology` at startup. Do not hardcode market identifiers, price
+- Read the initial WebSocket `SymbologySnapshot` at startup. Do not hardcode market identifiers, price
   exponents, tick sizes, quantity precision, or contract addresses.
 - Generate a new local Ed25519 wallet. Never look for or use a bundled keypair.
 
@@ -83,7 +85,9 @@ and private lifecycle events before deciding whether a command needs retrying.
 - One IOC may produce multiple partial `Fill` events.
 - Process `FillSettled` and `FillBusted`; a `Fill` alone is not irrevocable
   accounting.
-- Deduplicate fills by wallet public key plus `trade_id`.
+- Track fills by wallet, subaccount, order ID, and `trade_id` when available.
+  A provisional `Fill` and its `FillSettled` or `FillBusted` are distinct stages;
+  do not discard settlement as a duplicate or merge two order legs of one trade.
 
 ## Identifier handling
 

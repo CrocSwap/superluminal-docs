@@ -14,7 +14,7 @@
         <link rel="prev" href="getting-started/python.html">
 
 
-        <link rel="next" href="api.html">
+        <link rel="next" href="tp-sl-and-reduce-only.html">
 
 
 
@@ -508,6 +508,33 @@
 
 
     <li class="md-nav__item">
+      <a href="tp-sl-and-reduce-only.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
       <a href="api.html" class="md-nav__link">
 
 
@@ -696,9 +723,9 @@ executable is distributed.</p>
 <p><code>Funding complete.</code> confirms settlement into the trading account, not merely
 submission of an EVM transaction.</p>
 <p>The faucet funds subaccount <code>0</code> only. It currently mints <code>10,000</code> testnet USDC
-when settled collateral plus pending EVM deposits is below <code>1,000</code> USDC. An
-already-funded account normally receives HTTP <code>403</code> until its balance is below
-that threshold.</p>
+when the subaccount has no open positions, the wallet has no vault-participant
+shares, and settled collateral plus pending EVM deposits is below <code>1,000</code> USDC.
+An ineligible account receives HTTP <code>403</code>.</p>
 <p>Run the utility before starting the C++ or Python client for the same wallet.
 The funding session would otherwise preempt the client's authenticated session.
 The utility closes its own session before exiting.</p>
@@ -716,7 +743,8 @@ does not request an EVM private key or transfer funds.</p>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--subaccount<span class="w"> </span>&lt;u64&gt;
 </code></pre></div>
 <p>Use the gateway origin, EVM RPC, and partition ID supplied for the same
-deployment. Successful output has this form:</p>
+deployment. The gateway accepts subaccount IDs <code>0..31</code>; the public faucet
+funds only <code>0</code>. Successful output has this form:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Fogo account:        &lt;base58 wallet address&gt;
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Subaccount:          &lt;subaccount id&gt;
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>EVM chain ID:        &lt;decimal chain id&gt;
@@ -770,7 +798,8 @@ contract.</p>
 <ul>
 <li><code>400</code>: malformed request, or the deposit address does not belong to the
   supplied wallet.</li>
-<li><code>403</code>: settled collateral plus pending deposits is at least <code>1,000</code> USDC.</li>
+<li><code>403</code>: the subaccount has open positions, the wallet has vault-participant
+  shares, or settled collateral plus pending deposits is at least <code>1,000</code> USDC.</li>
 <li><code>502</code>: an EVM or Fogo RPC operation failed.</li>
 </ul>
 <p>The public faucet does not require an EVM wallet or EVM gas.</p>

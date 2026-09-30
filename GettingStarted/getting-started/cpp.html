@@ -444,6 +444,17 @@
 </li>
 
         <li class="md-nav__item">
+  <a href="#submit-or-cancel-tpsl" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit or cancel TP/SL
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
   <a href="#modify-or-cancel-an-order" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -535,6 +546,33 @@
 
 
     Funding Accounts
+
+
+
+  </span>
+
+
+
+      </a>
+    </li>
+
+
+
+
+
+
+
+
+
+    <li class="md-nav__item">
+      <a href="../tp-sl-and-reduce-only.html" class="md-nav__link">
+
+
+
+  <span class="md-ellipsis">
+
+
+    TP/SL and Reduce-only
 
 
 
@@ -678,6 +716,17 @@
 </li>
 
         <li class="md-nav__item">
+  <a href="#submit-or-cancel-tpsl" class="md-nav__link">
+    <span class="md-ellipsis">
+
+        Submit or cancel TP/SL
+
+    </span>
+  </a>
+
+</li>
+
+        <li class="md-nav__item">
   <a href="#modify-or-cancel-an-order" class="md-nav__link">
     <span class="md-ellipsis">
 
@@ -797,14 +846,14 @@ derivation, faucet limits, and manual deposits.</p>
 <li><code>--subaccount_id</code>: trading subaccount displayed by the application.</li>
 <li><code>--partition_id</code>: signed-message partition; public testnet uses <code>0x01</code>.</li>
 <li><code>--feed_ids</code>: optional comma-separated market IDs. When omitted, the client
-  subscribes to every active market returned by <code>/v1/symbology</code>.</li>
+  subscribes to every active market in the WebSocket <code>SymbologySnapshot</code>.</li>
 </ul>
-<p>The client fetches symbology from the HTTP origin corresponding to <code>--ws</code>, then
+<p>The client reads symbology and exchange config from the gateway WebSocket, then
 authenticates the wallet and starts the account and market subscriptions.</p>
 <h2 id="connection-flow">Connection flow<a class="headerlink" href="#connection-flow" title="Permanent link">&para;</a></h2>
 <p>The client performs these steps automatically:</p>
 <ol>
-<li>Fetch <code>GET /v1/symbology</code>.</li>
+<li>Read the initial <code>SymbologySnapshot</code> and <code>ExchangeConfigSnapshot</code>.</li>
 <li>Send <code>auth_wallet</code> with the wallet public key.</li>
 <li>Sign the returned <code>auth_challenge</code> locally.</li>
 <li>Send <code>auth_response</code> and wait for <code>ack accepted</code>.</li>
@@ -824,12 +873,16 @@ funding, modifications, and cancellations.</p>
 <p>The client synchronizes them independently and combines them in its ladder.
 It also consumes <code>Trade</code> events. If it receives <code>stream_reset</code>, it discards the
 affected local book and resubscribes.</p>
-<p>Market IDs and integer scaling are deployment data. Fetch them rather than
-hardcoding them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>--fail<span class="w"> </span>https://testnet.slx.fi/v1/symbology
-</code></pre></div>
+<p>Use the API's <a href="../api.html#book-synchronization-and-recovery">book recovery rules</a>
+for cursor continuity and absolute level updates, and
+<a href="../api.html#account-synchronization-and-recovery">account recovery rules</a> for
+snapshot boundaries, settlement, and command reconciliation after disconnects.</p>
+<p>Market IDs and integer scaling are deployment data. Read them from the initial
+WebSocket snapshot rather than hardcoding them.</p>
 <p>Use <code>px_exponent</code>, <code>tick_size</code>, and <code>size_decimals</code> when converting human
 prices and quantities to raw wire integers.</p>
+<p>Collateral, fees, PnL, and funding amounts use a separate fixed six-decimal USD
+scale; see <a href="../api.html#numeric-units">Numeric units</a>.</p>
 <h2 id="submit-an-order">Submit an order<a class="headerlink" href="#submit-an-order" title="Permanent link">&para;</a></h2>
 <p>The order ticket creates and signs a <code>signed_order</code> proof locally. Choose:</p>
 <ul>
@@ -837,7 +890,8 @@ prices and quantities to raw wire integers.</p>
 <li>buy or sell;</li>
 <li>quantity;</li>
 <li>GTC limit, GTC mark-to-mid, or IOC market order; and</li>
-<li>explicit <code>MAKER</code> or <code>TAKER</code> role.</li>
+<li>explicit <code>MAKER</code> or <code>TAKER</code> role; and</li>
+<li><code>Normal</code> or <code>Reduce only</code> execution.</li>
 </ul>
 <p>Role is not inferred. Market orders require <code>TAKER</code>. For a protected market
 order, provide a reference price and slippage from 1 to 1,000,000 ppm. Leave
@@ -850,14 +904,42 @@ private account stream:</p>
 <li><code>OrderReject</code> reports an asynchronous rejection; and</li>
 <li><code>Fill</code>, <code>FillSettled</code>, and <code>FillBusted</code> report execution and settlement.</li>
 </ul>
+<p><code>Reduce only</code> sets <code>execution_mode = 4</code> in the signed order. Such an order can
+only reduce an existing position; the settled amount can be smaller than its
+provisional fill. The account view reconciles <code>settled_qty</code> and <code>applied_fee</code>.</p>
+<h2 id="submit-or-cancel-tpsl">Submit or cancel TP/SL<a class="headerlink" href="#submit-or-cancel-tpsl" title="Permanent link">&para;</a></h2>
+<p>The TP/SL section uses the ticket's selected market, <strong>exit side</strong>, and
+quantity. Enter a take-profit price, stop-loss price, or both. Leave a leg
+blank to disable it. Trigger prices must be on the market grid. The reference
+client selects both oracle and auction trigger sources and a 30-day expiry.</p>
+<p>Choose <code>Immediate</code> to protect an existing position. Choose <code>Parent fill</code> to
+protect settled fills from a new parent order. For parent mode, first select
+the exit side and press <strong>Create TP/SL</strong>. Wait for <code>ConditionalApproved</code> and
+copy its group ID from the account panel. Enter that ID in <strong>Group ID</strong>, set
+the ordinary order ticket to the <strong>opposite side</strong> with the same market and
+a quantity at least as large as the group's, then press <strong>Submit Parent</strong>.
+The client signs and binds that order to the approved group; <code>OrderAccepted</code>
+or <code>OrderReject</code> gives its result. Settled parent fills protect at most the
+group's quantity; any larger remainder is unprotected by that group.</p>
+<p>To cancel an existing group, enter its ID and press <strong>Cancel TP/SL</strong>. While
+the group is dormant or waiting, this sends <code>signed_conditional_cancel</code>. Once
+a leg triggers and its child is accepted as a working order, cancellation
+targets that child with <code>signed_cancel</code>. If the child ID is unavailable after
+reconnect, cancel it from <strong>Working Orders</strong> when it appears. Confirm
+cancellation with the private account stream; sending the request alone does
+not prove it succeeded. See
+<a href="../tp-sl-and-reduce-only.html">TP/SL and reduce-only</a> for lifecycle and sizing
+rules.</p>
 <h2 id="modify-or-cancel-an-order">Modify or cancel an order<a class="headerlink" href="#modify-or-cancel-an-order" title="Permanent link">&para;</a></h2>
 <p>Select a working order in the TUI to modify or cancel it. The client signs the
 corresponding command and waits for <code>ModifyAck</code>, <code>ModifyReject</code>, <code>CancelAck</code>, or
 <code>CancelReject</code> on the account stream.</p>
+<p>The client preserves the execution mode from both <code>OrderAccepted</code> and
+<code>AccountSnapshot</code>, so a reduce-only order can be modified after reconnect.</p>
 <h2 id="first-run-checklist">First-run checklist<a class="headerlink" href="#first-run-checklist" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Check <code>https://testnet.slx.fi/healthz</code> returns <code>ok</code>.</li>
-<li>Fetch <code>/v1/symbology</code> and confirm at least one active market.</li>
+<li>Connect to the WebSocket and confirm its snapshot contains an active market.</li>
 <li>Fund the wallet and wait for <code>Funding complete.</code>.</li>
 <li>Start <code>api_client</code> with the same keypair and subaccount <code>0</code>.</li>
 <li>Confirm <code>AccountSnapshot</code> and market data appear.</li>
@@ -867,7 +949,7 @@ corresponding command and waits for <code>ModifyAck</code>, <code>ModifyReject</
 <h2 id="common-problems">Common problems<a class="headerlink" href="#common-problems" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Session preempted:</strong> another connection authenticated the same wallet.</li>
-<li><strong>Invalid symbol:</strong> refresh <code>/v1/symbology</code> and use an active market ID.</li>
+<li><strong>Invalid symbol:</strong> reconnect and use an active market ID from the snapshot.</li>
 <li><strong>Invalid price grid:</strong> encode the price using current <code>px_exponent</code> and
   <code>tick_size</code>.</li>
 <li><strong>Missing balance:</strong> complete funding and wait for
