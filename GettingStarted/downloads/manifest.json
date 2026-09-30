@@ -1,0 +1,19 @@
+{
+  "aethon_commit": "b8eee38d3caa70e0c2d1a99f0862baa8de10c760",
+  "aethon_git_tree": "5805cd8b8d5f41347af46f9a37ed3df792873626",
+  "aethon_version": "1.0.0",
+  "artifacts": [
+    {
+      "name": "superluminal-cpp-client.zip",
+      "sha256": "b537f6557b852175db0bb23d601d065e71abcaacb9be8bac3eae70449799a9aa",
+      "size_bytes": 3423453
+    },
+    {
+      "name": "superluminal-python-client.zip",
+      "sha256": "ea05554029d78155e311e2edd25556a6ab66ddca8ef11cd7050b376fd57da349",
+      "size_bytes": 1077388
+    }
+  ],
+  "build_timestamp_utc": "2026-09-30T19:30:21Z",
+  "source_tree_state": "clean"
+}

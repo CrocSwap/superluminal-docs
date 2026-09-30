@@ -1,0 +1,137 @@
+# Superluminal testnet trading-agent contract
+
+This directory is the complete public context for building a Superluminal
+testnet trading agent. Do not assume access to another repository, an internal
+client, a prefunded wallet, or unpublished deployment information.
+
+## Scope and source of truth
+
+- Testnet only: `https://testnet.slx.fi` and `wss://testnet.slx.fi/ws`.
+- Read `api.html` for the public HTTP, WebSocket, and signed-wire contracts.
+- Read `api.html#numeric-units`, `api.html#private-order-and-fill-event-schemas`,
+  and both book/account recovery sections before implementing account state.
+- Read `funding.html` before funding a wallet.
+- In the hosted documentation tree, download a tested C++ or Python reference
+  client from `downloads/` and verify it against `downloads/manifest.json`.
+  Inside an extracted bundle, use the client source and `funding-tools/` next
+  to this `docs/` directory; a nested `downloads/` directory is not expected.
+- Use `conformance/test-vectors.json` to verify signing and integer handling.
+- Read the initial WebSocket `SymbologySnapshot` at startup. Do not hardcode market identifiers, price
+  exponents, tick sizes, quantity precision, or contract addresses.
+- Generate a new local Ed25519 wallet. Never look for or use a bundled keypair.
+
+The first supported implementation should be deliberately narrow: subaccount
+`0`, public testnet, one wallet, and price-bounded LIMIT/IOC orders. Do not add
+production endpoints, leverage automation, withdrawals, vaults, or delegation
+until the basic lifecycle below passes end to end.
+
+## Connection architecture
+
+- A wallet may have exactly one authenticated WebSocket session.
+- A TUI, auditor, funding process, or second bot authenticated with the same
+  wallet can preempt the active bot with `session_preempted`.
+- Use one authenticated socket per wallet for private account state and signed
+  commands.
+- Public market data may use a separate unauthenticated socket and may be shared
+  by multiple wallets.
+- Treat `session_preempted` as terminal. Do not reconnect in a loop while
+  another process owns the wallet session.
+
+## Prepare and fund the account
+
+Testnet collateral is provided by the Superluminal team through the channel
+used to onboard the user.
+
+1. Generate and securely store a Solana-format Ed25519 keypair.
+2. Request testnet funds from Superluminal using only the public Fogo wallet
+   address and intended subaccount ID. Never send the keypair.
+3. If the team requests an EVM deposit address, authenticate on a separate
+   WebSocket, send `user_deposit_address` before `subscribe_account`, and wait
+   for the matching `UserDepositAddressStatus`. Registration does not emit a
+   generic accepted acknowledgement. Derive the CREATE2 address from
+   `GET /v1/evm/addresses` and give the address to the team.
+4. After the team confirms funding, connect the trading client and verify that
+   `UserCollateralUpdate` or a fresh `AccountSnapshot` shows credited collateral.
+
+An EVM receipt alone is not proof of credited trading collateral. Do not place
+orders until the private account stream confirms the balance.
+
+## Readiness gate
+
+Authentication acknowledgement is not readiness. Do not submit an order until
+all of the following are true:
+
+- a current `AccountSnapshot` has been received;
+- the intended subaccount exists;
+- collateral is sufficient for the bounded test order;
+- current positions match the expected startup state;
+- working orders have been reconciled; and
+- market data is synchronized after any `stream_reset`.
+
+On every startup or reconnect, rebuild state from the latest account snapshot
+and private lifecycle events before deciding whether a command needs retrying.
+
+## Safe order behaviour
+
+- The acceptance implementation must use an explicitly price-bounded LIMIT or
+  IOC order with a small testnet notional.
+- Role is explicit: `MAKER` or `TAKER`; it is not inferred.
+- Encode price and quantity from the current symbology response.
+- `MARKET` with wire fields `price = 0` and `delta_ppm = 0` is unrestricted.
+  Do not use unrestricted MARKET in the acceptance flow.
+- Sending a signed command is not order truth. Correlate the private stream by
+  `client_instruction_id` and consume its authoritative result.
+- One IOC may produce multiple partial `Fill` events.
+- Process `FillSettled` and `FillBusted`; a `Fill` alone is not irrevocable
+  accounting.
+- Track fills by wallet, subaccount, order ID, and `trade_id` when available.
+  A provisional `Fill` and its `FillSettled` or `FillBusted` are distinct stages;
+  do not discard settlement as a duplicate or merge two order legs of one trade.
+
+## Identifier handling
+
+The JSON interface has stable order-identifier types:
+
+- `client_instruction_id` and `original_client_instruction_id` are always
+  quoted unsigned decimal strings. Decode them losslessly and reject numbers.
+- `external_order_id` is always a JSON integer number and is guaranteed not to
+  exceed `9007199254740991`. Reject strings.
+
+Other fields explicitly marked as dual-form in the API reference, including
+leaderboard `last_seq` and user-volume `subaccount_id`, must still be preserved
+losslessly. JavaScript and TypeScript implementations should decode those as
+`bigint` or lossless decimal strings, never `Number`.
+
+Bit 63 of public `request_id64` is reserved, so its maximum public value is
+`9223372036854775807`. Other unsigned 64-bit values may use the complete range
+through `18446744073709551615`.
+
+## Always-on operation
+
+- Persist enough lifecycle state to reconcile after restart.
+- Maintain heartbeat and reconnect health.
+- Cancel working orders that exceed their intended lifetime.
+- Never blindly retry an order after an ambiguous disconnect; reconcile first.
+- On SIGTERM, stop creating orders, cancel working orders, flatten any position
+  with a bounded order, wait for authoritative lifecycle and settlement events,
+  and verify the final account state.
+
+## Acceptance test
+
+The build is complete only when a fresh wallet can perform this sequence using
+only this directory:
+
+1. Request testnet funds from Superluminal; register a deposit address if the
+   team asks for one.
+2. Connect the client, validate `AccountSnapshot`, and confirm credited trading
+   collateral in the private account stream.
+3. Synchronize market data and reconcile working orders.
+4. Place one small price-bounded testnet order and observe the authoritative
+   lifecycle, including partial and settlement events when present.
+5. Cancel or flatten, close gracefully, reconnect, and prove there are no
+   unexpected positions or working orders.
+6. Verify that a second authenticated session for the same wallet preempts the
+   first and that the client stops rather than fighting for the session.
+
+Do not include real keys, funded fixture wallets, private endpoints, internal
+hostnames, or implementation details in generated clients or documentation.
